@@ -28,6 +28,11 @@ function Sidebar() {
             </Accordion.Body>
           </Accordion>
           <div className="px-4 py-2" style={{ backgroundColor: "#157fb9" }}>
+            <Nav.Link href="/create-lottery">
+              <h5>Create Lottery</h5>
+            </Nav.Link>
+          </div>
+          <div className="px-4 py-2" style={{ backgroundColor: "#157fb9" }}>
             <Nav.Link href="/package">
               <h5>Manage Package</h5>
             </Nav.Link>
