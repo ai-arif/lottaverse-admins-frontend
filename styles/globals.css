@@ -57,3 +57,16 @@ th {
   background-color: #157fb9;
   color: white; /* Adjust text color as needed */
 }
+.connect-wallet{
+  background-color: "skyblue";
+  color: "black";
+  padding: "10px 20px";
+  border: "none";
+  border-radius: "5px";
+  cursor: "pointer";
+  box-shadow: "0 5px #666";
+  font-weight: "bold";
+  top: "20px";
+  position: "absolute";
+  right: "20px";
+}

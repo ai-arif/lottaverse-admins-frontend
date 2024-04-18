@@ -3,6 +3,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import Sidebar from "../Sidebar";
 
 function Layout({ children }) {
+
   return (
     <Container fluid>
       <Row>
@@ -12,6 +13,7 @@ function Layout({ children }) {
           </div>
         </Col>
         <Col md={9} className="main-column">
+         
           <main>{children}</main>
         </Col>
       </Row>

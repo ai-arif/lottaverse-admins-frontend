@@ -9,13 +9,21 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.29.2",
+    "@wagmi/core": "^2.6.17",
+    "@web3modal/wagmi": "^4.1.9",
+    "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
+    "moment": "^2.30.1",
     "next": "14.1.4",
+    "qs": "^6.12.1",
     "react": "^18",
     "react-bootstrap": "^2.10.2",
     "react-bootstrap-sidebar-menu": "^2.0.3",
     "react-dom": "^18",
-    "sass": "^1.72.0"
+    "sass": "^1.72.0",
+    "viem": "^2.9.20",
+    "wagmi": "^2.5.20"
   },
   "devDependencies": {
     "eslint": "^8",
