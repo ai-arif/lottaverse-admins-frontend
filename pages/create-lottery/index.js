@@ -112,6 +112,9 @@ const Index = () => {
 
     const lotteryOperator = address;
     const ticket = formData.ticketPrice.toString();
+    // 
+    await submitLotteryData(formData);
+    return
 
     writeContract({
       abi: LOTTERY_CONTRACT_ABI,
@@ -195,11 +198,11 @@ const Index = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="firstPrize">First Prize ($)</label>
+                <label htmlFor="firstPrize">First Prize</label>
                 <input
                   type="number"
                   className="form-control"
-                  id="text"
+                  id="firstPrize"
                   placeholder="e.g., 3000"
                   onChange={handleChange}
                   value={formData.firstPrize}
