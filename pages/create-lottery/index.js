@@ -45,7 +45,7 @@ const Index = () => {
     operatorCommissionPercentage: "",
     lotteryOperator: address,
   });
-  //*******************************************************************/
+  
   const [loading, setLoading] = useState(false);
 
   // console.log("this is my address", address);

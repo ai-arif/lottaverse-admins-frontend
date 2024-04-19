@@ -22,7 +22,10 @@ th {
   /* border-style: solid ; */
   border-width: 0;
 }
-
+a{
+  text-decoration: none;
+  color:white;
+}
 .accordion-button {
   background-color: #157fb9;
 }

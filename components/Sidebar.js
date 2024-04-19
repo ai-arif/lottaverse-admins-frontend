@@ -1,13 +1,14 @@
 import React from "react";
-import { Accordion, Container, Nav } from "react-bootstrap";
+import { Accordion, Container } from "react-bootstrap";
+import Link from "next/link";
 
 function Sidebar() {
   return (
     <>
       <div style={{ color: "white" }} className="py-4">
-        <Nav.Link href="/">
+        <Link href="/">
           <h3 className="text-center">Admin Dashboard</h3>
-        </Nav.Link>
+        </Link>
         <div
           className="pt-4"
           style={{ display: "flex", gap: "1rem", flexDirection: "column" }}
@@ -17,25 +18,29 @@ function Sidebar() {
               <h5 style={{ color: "white" }}>Manage Users</h5>
             </Accordion.Header>
             <Accordion.Body>
-              <Nav style={{ display: "flex", flexDirection: "column" }}>
-                <Nav.Link href="/users-list" style={{ color: "white" }}>
-                  User List
-                </Nav.Link>
-                <Nav.Link href="/premium-users" style={{ color: "white" }}>
-                  Premium User
-                </Nav.Link>
-              </Nav>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <Link href="/users-list">
+                  {/* <a style={{ color: "white" }}> */}
+                    User List
+                    {/* </a> */}
+                </Link>
+                <Link href="/premium-users">
+                  {/* <a style={{ color: "white" }}> */}
+                    Premium User
+                    {/* </a> */}
+                </Link>
+              </div>
             </Accordion.Body>
           </Accordion>
           <div className="px-4 py-2" style={{ backgroundColor: "#157fb9" }}>
-            <Nav.Link href="/create-lottery">
+            <Link href="/create-lottery">
               <h5>Create Lottery</h5>
-            </Nav.Link>
+            </Link>
           </div>
           <div className="px-4 py-2" style={{ backgroundColor: "#157fb9" }}>
-            <Nav.Link href="/package">
+            <Link href="/package">
               <h5>Manage Package</h5>
-            </Nav.Link>
+            </Link>
           </div>
         </div>
       </div>
