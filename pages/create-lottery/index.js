@@ -130,52 +130,13 @@ const Index = () => {
   // USE WRITE CONTRACT to write smart contract function
   const Lottery = async () => {
     // ******************Create lottery Smart Contract function params**********/
-    //         address _lotteryOperator,
-    //         uint256 _ticketPrice,
-    //         uint256 _maxTickets,
-    //         uint256 _operatorCommissionPercentage,
-    //         uint256 _expiration,
-    //         uint256 _lotteryId
-    const unixEpochTime = moment(formData.expiry).unix();
-    console.log("this is my address", address);
-
-    const lotteryOperator = address;
-    const ticket = formData.ticketPrice.toString();
-
-    writeContract({
-      abi: LOTTERY_CONTRACT_ABI,
-      address: "0x6dcd9b7253f596ae46354e85a08a67d0e88a30cf",
-      functionName: "createLottery",
-      args: [
-        lotteryOperator.toString(),
-        parseEther(ticket),
-        formData.maxTicketCount,
-        formData.operatorCommissionPercentage,
-        unixEpochTime,
-        formData.lotteryType,
-      ],
-    });
+    // address _lotteryOperator,
+    // uint256 _ticketPrice,
+    // uint256 _maxTickets,
+    // uint256 _operatorCommissionPercentage,
+    // uint256 _expiration
+    submitLotteryData();
   };
-
-  // let transactionData = useWaitForTransactionReceipt({
-  //   hash: txHash,
-  //   confirmations: 1,
-  //   onReplaced(response) {
-  //     if (response?.reason === "cancelled") {
-  //       alter("Transaction Failed");
-  //     }
-  //   },
-  // });
-
-  // useEffect(() => {
-  //   if (transactionData?.status === "success") {
-  //     console.log(transactionData);
-  //     alert("Purchased Successfully!");
-  //     setLoading(false);
-  //     setTxHash(null);
-  //     transactionData = "";
-  //   }
-  // }, [transactionData?.status]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -225,7 +186,7 @@ const Index = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="firstPrize">First Prize</label>
+                <label htmlFor="firstPrize">First Prize ($)</label>
                 <input
                   type="text"
                   className="form-control"
