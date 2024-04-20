@@ -25,7 +25,12 @@ const style = {
 };
 
 const Index = () => {
-  const { readcontract } = useReadContract();
+  const { readcontract, data: lotteryid } = useReadContract({
+    abi: LOTTERY_CONTRACT_ABI,
+    address: "0x16e380bd39eef11eac96c965c652fb2ee0161cfa",
+    functionName: "lotteryCount",
+    args: [],
+  });
   const { writeContract, isSuccess, reset, isError, error, data, isPending } =
     useWriteContract();
   const { WaitForTransactionReceipt } = useWaitForTransactionReceipt();
@@ -45,23 +50,13 @@ const Index = () => {
     operatorCommissionPercentage: "",
     lotteryOperator: address,
   });
-  
+
   const [loading, setLoading] = useState(false);
 
   // console.log("this is my address", address);
   // console.log("isConnected", isConnected);
 
   //*****************Read the Contract Functions OR Public Accessors */
-  // const lotterycount = useReadContract({
-  //   abi: LOTTERY_CONTRACT_ABI,
-  //   address: "0x6dcd9b7253f596ae46354e85a08a67d0e88a30cf",
-  //   functionName: "lotteryCount",
-  //   args: [],
-  // });
-  // console.log(
-  //   "This is user lottery count :::::::::::",
-  //   Number(lotterycount.data)
-  // );
 
   // const lotteryinfo = useReadContract({
   //   abi: LOTTERY_CONTRACT_ABI,
@@ -74,7 +69,16 @@ const Index = () => {
     async (data) => {
       try {
         setLoading(true);
-        const res = await createLottery({ ...formData, transactionHash: data });
+        console.log({
+          ...formData,
+          transactionHash: data,
+          lotteryID: lotteryid,
+        });
+        const res = await createLottery({
+          ...formData,
+          transactionHash: data,
+          lotteryID: Number(lotteryid),
+        });
         if (res?.success) {
           reset();
           alert(res?.message);
@@ -85,7 +89,7 @@ const Index = () => {
         setLoading(false);
       }
     },
-    [formData, reset]
+    [formData, lotteryid, reset]
   );
 
   useEffect(() => {
@@ -101,12 +105,11 @@ const Index = () => {
   // USE WRITE CONTRACT to write smart contract function
   const Lottery = async () => {
     // ******************Create lottery Smart Contract function params**********/
-    //         address _lotteryOperator,
-    //         uint256 _ticketPrice,
-    //         uint256 _maxTickets,
-    //         uint256 _operatorCommissionPercentage,
-    //         uint256 _expiration,
-    //         uint256 _lotteryId
+    // address _lotteryOperator,
+    // uint256 _ticketPrice,
+    // uint256 _maxTickets,
+    // uint256 _operatorCommissionPercentage,
+    // uint256 _expiration
     const unixEpochTime = moment(formData.expiry).unix();
     console.log("this is my address", address);
 
@@ -115,7 +118,7 @@ const Index = () => {
 
     writeContract({
       abi: LOTTERY_CONTRACT_ABI,
-      address: "0x6dcd9b7253f596ae46354e85a08a67d0e88a30cf",
+      address: "0x16e380bd39eef11eac96c965c652fb2ee0161cfa",
       functionName: "createLottery",
       args: [
         lotteryOperator.toString(),
@@ -123,30 +126,9 @@ const Index = () => {
         formData.maxTicketCount,
         formData.operatorCommissionPercentage,
         unixEpochTime,
-        formData.lotteryType,
       ],
     });
   };
-
-  // let transactionData = useWaitForTransactionReceipt({
-  //   hash: txHash,
-  //   confirmations: 1,
-  //   onReplaced(response) {
-  //     if (response?.reason === "cancelled") {
-  //       alter("Transaction Failed");
-  //     }
-  //   },
-  // });
-
-  // useEffect(() => {
-  //   if (transactionData?.status === "success") {
-  //     console.log(transactionData);
-  //     alert("Purchased Successfully!");
-  //     setLoading(false);
-  //     setTxHash(null);
-  //     transactionData = "";
-  //   }
-  // }, [transactionData?.status]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -155,6 +137,7 @@ const Index = () => {
     e.preventDefault();
     if (isConnected) {
       await Lottery();
+      // console.log("This is lottery ID", lotteryid);
     } else {
       alert("Wallet is not connected");
     }
@@ -179,9 +162,9 @@ const Index = () => {
                   onChange={handleChange}
                   value={formData.lotteryType}>
                   <option value="">Select</option>
-                  <option value="0">Easy</option>
-                  <option value="1">Super</option>
-                  <option value="2">SuperX</option>
+                  <option value="easy">Easy</option>
+                  <option value="super">Super</option>
+                  <option value="superx">SuperX</option>
                 </select>
               </div>
               <div className="form-group">
@@ -197,9 +180,9 @@ const Index = () => {
               <div className="form-group">
                 <label htmlFor="firstPrize">First Prize ($)</label>
                 <input
-                  type="number"
+                  type="text"
                   className="form-control"
-                  id="text"
+                  id="firstPrize"
                   placeholder="e.g., 3000"
                   onChange={handleChange}
                   value={formData.firstPrize}

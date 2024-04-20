@@ -232,14 +232,15 @@ export const LOTTERY_CONTRACT_ABI = [
         name: "_expiration",
         type: "uint256",
       },
+    ],
+    name: "createLottery",
+    outputs: [
       {
         internalType: "uint256",
-        name: "_lotteryId",
+        name: "",
         type: "uint256",
       },
     ],
-    name: "createLottery",
-    outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
@@ -318,11 +319,6 @@ export const LOTTERY_CONTRACT_ABI = [
       {
         internalType: "uint256",
         name: "expiration",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "lotteryId",
         type: "uint256",
       },
       {
