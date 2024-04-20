@@ -27,7 +27,7 @@ const metadata = {
 };
 
 const chains = [optimismSepolia];
-const config = defaultWagmiConfig({
+export const lotteryconfig = defaultWagmiConfig({
   chains,
   projectId,
   metadata,
@@ -37,7 +37,7 @@ const config = defaultWagmiConfig({
 });
 
 createWeb3Modal({
-  wagmiConfig: config,
+  wagmiConfig: lotteryconfig,
   projectId,
   enableAnalytics: true,
   enableOnramp: true,
@@ -61,7 +61,7 @@ export default function App({ Component, pageProps }) {
   return (
     <>
       {ready ? (
-        <WagmiProvider config={config}>
+        <WagmiProvider config={lotteryconfig}>
           <QueryClientProvider client={queryClient}>
             <WalletButton />
             <Component {...pageProps} />;

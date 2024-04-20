@@ -1,15 +1,17 @@
 import Layout from "@/components/Layout";
 import { createLottery } from "@/source/services/api/methods/lottery";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { LOTTERY_CONTRACT_ABI } from "../../components/constants/lotteryabi";
 import moment from "moment";
-import {
-  useReadContract,
-  useWaitForTransactionReceipt,
-  useWriteContract,
-} from "wagmi";
+// import { useReadContract, useWriteContract } from "wagmi";
 import { useAccount, useDisconnect, useSwitchChain } from "wagmi";
 import { formatEther, parseEther } from "viem";
+import {
+  readContract,
+  writeContract,
+  waitForTransactionReceipt,
+} from "@wagmi/core";
+import { lotteryconfig } from "../_app";
 // import { writeContract } from "@wagmi/core";
 
 const style = {
@@ -25,15 +27,18 @@ const style = {
 };
 
 const Index = () => {
-  const { readcontract, data: lotteryid } = useReadContract({
-    abi: LOTTERY_CONTRACT_ABI,
-    address: "0x16e380bd39eef11eac96c965c652fb2ee0161cfa",
-    functionName: "lotteryCount",
-    args: [],
-  });
-  const { writeContract, isSuccess, reset, isError, error, data, isPending } =
-    useWriteContract();
-  const { WaitForTransactionReceipt } = useWaitForTransactionReceipt();
+  // const {
+  //   readcontract,
+  //   isLoading,
+  //   data: lotteryid,
+  // } = useReadContract({
+  //   abi: LOTTERY_CONTRACT_ABI,
+  //   address: "0x16e380bd39eef11eac96c965c652fb2ee0161cfa",
+  //   functionName: "lotteryCount",
+  //   args: [],
+  // });
+  // const { writeContract, isSuccess, reset, isError, error, data, isPending } =
+  //   useWriteContract();
   const { isConnected, chainId, address } = useAccount();
 
   //*******************************************************************/
@@ -65,42 +70,62 @@ const Index = () => {
   //   args: [1n],
   // });
 
-  const submitLotteryData = useCallback(
-    async (data) => {
-      try {
-        setLoading(true);
-        console.log({
-          ...formData,
-          transactionHash: data,
-          lotteryID: lotteryid,
+  const submitLotteryData = useCallback(async () => {
+    try {
+      setLoading(true);
+      const unixEpochTime = moment(formData.expiry).unix();
+      const lotteryOperator = address;
+      const ticket = formData.ticketPrice.toString();
+      const hash = await writeContract(lotteryconfig, {
+        abi: LOTTERY_CONTRACT_ABI,
+        address: "0x16e380bd39eef11eac96c965c652fb2ee0161cfa",
+        functionName: "createLottery",
+        args: [
+          lotteryOperator.toString(),
+          parseEther(ticket),
+          formData.maxTicketCount,
+          formData.operatorCommissionPercentage,
+          unixEpochTime,
+        ],
+      });
+      const waiting = await waitForTransactionReceipt(lotteryconfig, {
+        hash,
+      });
+      console.log(waiting);
+      if (waiting?.status === "success") {
+        const lotteryid = await readContract(lotteryconfig, {
+          abi: LOTTERY_CONTRACT_ABI,
+          address: "0x16e380bd39eef11eac96c965c652fb2ee0161cfa",
+          functionName: "lotteryCount",
         });
+
         const res = await createLottery({
           ...formData,
-          transactionHash: data,
+          transactionHash: hash,
           lotteryID: Number(lotteryid),
         });
         if (res?.success) {
-          reset();
           alert(res?.message);
         }
-      } catch (error) {
-        alert("api error" + error?.message);
-      } finally {
-        setLoading(false);
+      } else {
+        alert("Transection rejected");
       }
-    },
-    [formData, lotteryid, reset]
-  );
+    } catch (error) {
+      alert(error?.message?.split(".")[0]);
+    } finally {
+      setLoading(false);
+    }
+  }, [address, formData]);
 
-  useEffect(() => {
-    if (isSuccess) {
-      submitLotteryData(data);
-    }
-    if (isError) {
-      alert(error?.message.split(".")[0]);
-      reset();
-    }
-  }, [isSuccess, data, error, isError, reset, submitLotteryData]);
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     submitLotteryData(data);
+  //   }
+  //   if (isError) {
+  //     alert(error?.message.split(".")[0]);
+  //     reset();
+  //   }
+  // }, [isSuccess, data, error, isError, reset, submitLotteryData]);
 
   // USE WRITE CONTRACT to write smart contract function
   const Lottery = async () => {
@@ -110,24 +135,7 @@ const Index = () => {
     // uint256 _maxTickets,
     // uint256 _operatorCommissionPercentage,
     // uint256 _expiration
-    const unixEpochTime = moment(formData.expiry).unix();
-    console.log("this is my address", address);
-
-    const lotteryOperator = address;
-    const ticket = formData.ticketPrice.toString();
-
-    writeContract({
-      abi: LOTTERY_CONTRACT_ABI,
-      address: "0x16e380bd39eef11eac96c965c652fb2ee0161cfa",
-      functionName: "createLottery",
-      args: [
-        lotteryOperator.toString(),
-        parseEther(ticket),
-        formData.maxTicketCount,
-        formData.operatorCommissionPercentage,
-        unixEpochTime,
-      ],
-    });
+    submitLotteryData();
   };
 
   const handleChange = (e) => {
@@ -273,7 +281,7 @@ const Index = () => {
                 type="submit"
                 className="btn btn-primary mt-3"
                 style={style}>
-                {isPending || loading ? "loading..." : "Create Lottery"}
+                {loading ? "loading..." : "Create Lottery"}
               </button>
             </form>
           </div>
