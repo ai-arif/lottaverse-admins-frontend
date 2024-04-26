@@ -38,6 +38,11 @@ function Sidebar() {
             </Link>
           </div>
           <div className="px-4 py-2" style={{ backgroundColor: "#157fb9" }}>
+            <Link href="/draw-lottery">
+              <h5>Draw Lottery</h5>
+            </Link>
+          </div>
+          <div className="px-4 py-2" style={{ backgroundColor: "#157fb9" }}>
             <Link href="/package">
               <h5>Manage Package</h5>
             </Link>
