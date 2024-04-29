@@ -178,7 +178,7 @@ const Index = () => {
               <div className="form-group">
                 <label htmlFor="expiry">Expiry</label>
                 <input
-                  type="date"
+                  type="datetime-local"
                   className="form-control"
                   id="expiry"
                   onChange={handleChange}
