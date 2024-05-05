@@ -81,13 +81,19 @@ const Index = () => {
 
   const handleSubmit = async (e, id) => {
     e.preventDefault();
-    console.log("button pressed", id);
     if (isConnected) {
+      // await handleSubmitDraw(id);
       await DrawLottery(id);
     } else {
       alert("Wallet is not connected");
     }
   };
+  const handleSubmitDraw= async(lotteryId)=>{
+    // drawlottery
+    const res = await axios.post("https://lottaverse.mainulhasan05.xyz/api/drawlottery", {
+      lotteryId: lotteryId,
+    });
+  }
   return (
     <div>
       <Layout>
