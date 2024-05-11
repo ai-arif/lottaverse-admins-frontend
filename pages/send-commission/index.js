@@ -19,7 +19,17 @@ import { lotteryconfig } from "../_app";
 const Index = () => {
   const [lotteries, setLotteries] = useState([]);
   const [addresses, setAddresses] = useState([]);
+  const [secondWinner, setSecondWinner] = useState({
+    address: "",
+    amount: "",
+  });
+  const [thirdWinner, setThirdWinner] = useState({
+    address: "",
+    amount: "",
+  });
+  const [random1kAddresses, setRandom1kAddresses] = useState([]);
   const [fivePercent, setFivePercent] = useState({});
+  const [randomUsersAmount, setRandomUsersAmount] = useState({});
   const [loading, setLoading] = useState(false);
   const { isConnected, chainId, address } = useAccount();
   // const {waitForTransactionReceipt,data} = useWaitForTransactionReceipt();
@@ -29,6 +39,7 @@ const Index = () => {
       "https://lottaverse.mainulhasan05.xyz/api/activelotteries"
     );
     setLotteries(res.data?.data);
+
     handleSubmitDraw(res.data?.data[0].lotteryID);
   };
   useEffect(() => {
@@ -39,12 +50,25 @@ const Index = () => {
     // drawlottery
     const res = await axios.post(
       "https://lottaverse.mainulhasan05.xyz/api/drawlottery",
+      // "https://a682-116-204-154-10.ngrok-free.app/api/drawlottery",
       {
         lotteryId: lotteryId,
       }
     );
     setAddresses(res.data.data.top30Users);
     setFivePercent(res.data.data.fivePercentOfTotalPerUser);
+    setSecondWinner({
+      address: res.data.data.secondPrizeWinner,
+      amount: res.data.data.secondWinnerAmount,
+    });
+    setThirdWinner({
+      address: res.data.data.thirdPrizeWinner,
+      amount: res.data.data.thirdWinnerAmount,
+    });
+    setRandom1kAddresses(res.data.data.randomUsers);
+    setRandomUsersAmount(res.data.data.randomWinnerAmount);
+    // randomWinnerAmount
+
   };
 
   const submitSenderComission = useCallback(async () => {
@@ -151,6 +175,17 @@ const Index = () => {
     // console.log(comession_addresses.length);
     console.log(fivePercent);
   };
+
+  const sendSecondWinnerCommission = async () => {
+    console.log(secondWinner);
+  }
+  const sendThirdWinnerCommission = async () => {
+    console.log(thirdWinner);
+  }
+  const sendRanom1kWinnerCommission = async () => {
+    console.log(random1kAddresses);
+    console.log(randomUsersAmount);
+  }
   return (
     <Layout>
       <div className="container">
@@ -167,13 +202,66 @@ const Index = () => {
             </option>
           ))}
         </select>
+        
         <br />
-        <button onClick={handleSendCommission} className="btn btn-primary">
-          Send Commission
-        </button>
         <br />
+        <div className="container">
+          <h2>Second Winner</h2>
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Address</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>{secondWinner?.address}</td>
+                  <td>{secondWinner?.amount}</td>
+                </tr>
+              
+            </tbody>
+          </table>
+          {/* send commision button */}
+          <button onClick={sendSecondWinnerCommission} className="btn btn-primary">
+            Send Commission Second Winner
+          </button>
+        </div>
+        <br />
+        <hr />
         <br />
 
+        <div className="container">
+          <h2>Third Winner</h2>
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Address</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>{thirdWinner?.address}</td>
+                  <td>{thirdWinner?.amount}</td>
+                </tr>
+              
+            </tbody>
+          </table>
+          {/* send commision button */}
+          <button onClick={sendThirdWinnerCommission} className="btn btn-primary">
+            Send Commission Third Winner
+          </button>
+        </div>
+        <br />
+        <hr />
+        <br />
+
+        <div className="container">
+          <h2>Top 30</h2>
+        </div>
         <table className="table">
           <thead>
             <tr>
@@ -190,6 +278,47 @@ const Index = () => {
             ))}
           </tbody>
         </table>
+        
+        <button onClick={handleSendCommission} className="btn btn-primary">
+          Send Commission top30
+        </button>
+        <br />
+        <hr />
+
+        <div className="container">
+
+        <br />
+        <hr />
+        <br />
+
+        <div className="container">
+          <h2>Random 1k Winners</h2>
+        </div>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Address</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {random1kAddresses.map((address, index) => (
+              <tr key={index}>
+                <td>{address}</td>
+                <td>{randomUsersAmount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        
+        <button onClick={sendRanom1kWinnerCommission} className="btn btn-primary">
+          Send Commission 1k Winners
+        </button>
+        <br />
+        <hr />
+
+        </div>
+
       </div>
     </Layout>
   );
