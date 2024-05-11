@@ -187,3 +187,5 @@ export const bep20 = [
     type: "function",
   },
 ];
+
+// const address = "0x1C8671B5a296DAE6DA2c11cC2F626C2B2B5c37A9";

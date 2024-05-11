@@ -3,6 +3,7 @@ import axios from "axios";
 import { getActiveLotteries } from "@/source/services/api/methods/lottery";
 import Layout from "@/components/Layout";
 import { LOTTERY_CONTRACT_ABI } from "../../components/constants/lotteryabi";
+
 // import { useReadContract, useWriteContract } from "wagmi";
 import { useAccount, useDisconnect, useSwitchChain } from "wagmi";
 import {
@@ -88,12 +89,15 @@ const Index = () => {
       alert("Wallet is not connected");
     }
   };
-  const handleSubmitDraw= async(lotteryId)=>{
+  const handleSubmitDraw = async (lotteryId) => {
     // drawlottery
-    const res = await axios.post("https://lottaverse.mainulhasan05.xyz/api/drawlottery", {
-      lotteryId: lotteryId,
-    });
-  }
+    const res = await axios.post(
+      "https://lottaverse.mainulhasan05.xyz/api/drawlottery",
+      {
+        lotteryId: lotteryId,
+      }
+    );
+  };
   return (
     <div>
       <Layout>
