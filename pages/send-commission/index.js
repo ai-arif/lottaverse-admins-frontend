@@ -3,7 +3,9 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Sender_CONTRACT_ABI } from "../../components/constants/Senderabi";
 import { bep20 } from "../../components/constants/bep20abi";
-import { LOTTERY_CONTRACT_ABI } from "../../components/constants/lotteryabi";
+import { LOTTERY_REFERRAL_ABI } from "../../components/constants/lotteryreferralabi";
+
+// import { LOTTERY_CONTRACT_ABI } from "../../components/constants/lotteryabi";
 
 // import { useReadContract, useWriteContract } from "wagmi";
 import { useAccount, useDisconnect, useSwitchChain } from "wagmi";

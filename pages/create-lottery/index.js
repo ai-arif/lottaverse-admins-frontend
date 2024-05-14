@@ -1,11 +1,11 @@
 import Layout from "@/components/Layout";
 import { createLottery } from "@/source/services/api/methods/lottery";
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { LOTTERY_CONTRACT_ABI } from "../../components/constants/lotteryabi";
+import { LOTTERY_REFERRAL_ABI } from "../../components/constants/lotteryreferralabi";
 import moment from "moment";
 // import { useReadContract, useWriteContract } from "wagmi";
 import { useAccount, useDisconnect, useSwitchChain } from "wagmi";
-import { formatEther, parseEther } from "viem";
+import { formatEther, parseEther, parseUnits } from "viem";
 import {
   readContract,
   writeContract,
@@ -13,6 +13,8 @@ import {
 } from "@wagmi/core";
 import { lotteryconfig } from "../_app";
 // import { writeContract } from "@wagmi/core";
+
+const lotteryContract = process.env.NEXT_PUBLIC_LOTTERY;
 
 const style = {
   backgroundColor: "skyblue",
@@ -76,12 +78,14 @@ const Index = () => {
       const unixEpochTime = moment(formData.expiry).unix();
       const lotteryOperator = address;
       const ticket = formData.ticketPrice.toString();
+      const firstWinner = parseUnits(formData.firstPrize.toString(), 18);
       const hash = await writeContract(lotteryconfig, {
-        abi: LOTTERY_CONTRACT_ABI,
-        address: "0x16e380bd39eef11eac96c965c652fb2ee0161cfa",
+        abi: LOTTERY_REFERRAL_ABI,
+        address: lotteryContract,
         functionName: "createLottery",
         args: [
           lotteryOperator.toString(),
+          firstWinner,
           parseEther(ticket),
           formData.maxTicketCount,
           formData.operatorCommissionPercentage,
@@ -94,8 +98,8 @@ const Index = () => {
       console.log(waiting);
       if (waiting?.status === "success") {
         const lotteryid = await readContract(lotteryconfig, {
-          abi: LOTTERY_CONTRACT_ABI,
-          address: "0x16e380bd39eef11eac96c965c652fb2ee0161cfa",
+          abi: LOTTERY_REFERRAL_ABI,
+          address: lotteryContract,
           functionName: "lotteryCount",
         });
 

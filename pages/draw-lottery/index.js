@@ -2,7 +2,9 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { getActiveLotteries } from "@/source/services/api/methods/lottery";
 import Layout from "@/components/Layout";
-import { LOTTERY_CONTRACT_ABI } from "../../components/constants/lotteryabi";
+import { LOTTERY_REFERRAL_ABI } from "../../components/constants/lotteryreferralabi";
+
+// import { LOTTERY_CONTRACT_ABI } from "../../components/constants/lotteryabi";
 
 // import { useReadContract, useWriteContract } from "wagmi";
 import { useAccount, useDisconnect, useSwitchChain } from "wagmi";
@@ -12,6 +14,8 @@ import {
   waitForTransactionReceipt,
 } from "@wagmi/core";
 import { lotteryconfig } from "../_app";
+
+const lotteryContract = process.env.NEXT_PUBLIC_LOTTERY;
 
 const style = {
   backgroundColor: "skyblue",
@@ -48,8 +52,8 @@ const Index = () => {
       }));
       const requestid = Number(lotteryid);
       const hash = await writeContract(lotteryconfig, {
-        abi: LOTTERY_CONTRACT_ABI,
-        address: "0x16e380bd39eef11eac96c965c652fb2ee0161cfa",
+        abi: LOTTERY_REFERRAL_ABI,
+        address: lotteryContract,
         functionName: "DrawLotteryWinner",
         args: [Number(lotteryid), 0, requestid],
       });
