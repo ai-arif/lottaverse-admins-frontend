@@ -2,7 +2,7 @@ import Layout from "@/components/Layout";
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Sender_CONTRACT_ABI } from "../../components/constants/Senderabi";
-import { bep20 } from "../../components/constants/bep20abi";
+import { usdt } from "../../components/constants/USDTabi";
 import { LOTTERY_REFERRAL_ABI } from "../../components/constants/lotteryreferralabi";
 
 // import { LOTTERY_CONTRACT_ABI } from "../../components/constants/lotteryabi";
@@ -17,6 +17,8 @@ import {
 } from "@wagmi/core";
 import { useWaitForTransactionReceipt } from "wagmi";
 import { lotteryconfig } from "../_app";
+
+const TokenContract = process.env.NEXT_PUBLIC_TOKENADDRESS;
 
 const Index = () => {
   const [lotteries, setLotteries] = useState([]);
@@ -80,8 +82,8 @@ const Index = () => {
         //   return addr.address;
         // });
         const balance = await readContract(lotteryconfig, {
-          abi: bep20,
-          address: "0x1C8671B5a296DAE6DA2c11cC2F626C2B2B5c37A9",
+          abi: usdt,
+          address: TokenContract,
           functionName: "balanceOf",
           args: [address],
         });
@@ -96,8 +98,8 @@ const Index = () => {
 
         Number(balance) >= totalamount
           ? ((Approve = await writeContract(lotteryconfig, {
-              abi: bep20,
-              address: "0x1C8671B5a296DAE6DA2c11cC2F626C2B2B5c37A9",
+              abi: usdt,
+              address: TokenContract,
               functionName: "approve",
               args: [
                 "0xc0ff7eed74f5be013c4f3579be6393f9591f1ca0",
@@ -135,7 +137,7 @@ const Index = () => {
               address: "0xc0ff7eed74f5be013c4f3579be6393f9591f1ca0",
               functionName: "sendTokensToMultipleAddresses",
               args: [
-                "0x1c8671b5a296dae6da2c11cc2f626c2b2b5c37a9",
+                TokenContract,
                 winner_addresses,
                 BigInt(randomUsersAmount),
               ],
@@ -166,8 +168,8 @@ const Index = () => {
         setLoading(true);
 
         const balance = await readContract(lotteryconfig, {
-          abi: bep20,
-          address: "0x1C8671B5a296DAE6DA2c11cC2F626C2B2B5c37A9",
+          abi: usdt,
+          address: TokenContract,
           functionName: "balanceOf",
           args: [address],
         });
@@ -178,8 +180,8 @@ const Index = () => {
 
         Number(balance) >= amount
           ? ((hash = await writeContract(lotteryconfig, {
-              abi: bep20,
-              address: "0x1C8671B5a296DAE6DA2c11cC2F626C2B2B5c37A9",
+              abi: usdt,
+              address: TokenContract,
               functionName: "transfer",
               args: [winner_address, BigInt(amount)],
             })),
@@ -213,8 +215,8 @@ const Index = () => {
         return addr.address;
       });
       const balance = await readContract(lotteryconfig, {
-        abi: bep20,
-        address: "0x1C8671B5a296DAE6DA2c11cC2F626C2B2B5c37A9",
+        abi: usdt,
+        address: TokenContract,
         functionName: "balanceOf",
         args: [address],
       });
@@ -229,8 +231,8 @@ const Index = () => {
 
       Number(balance) >= fivePercent
         ? ((Approve = await writeContract(lotteryconfig, {
-            abi: bep20,
-            address: "0x1C8671B5a296DAE6DA2c11cC2F626C2B2B5c37A9",
+            abi: usdt,
+            address: TokenContract,
             functionName: "approve",
             args: [
               "0xc0ff7eed74f5be013c4f3579be6393f9591f1ca0",
@@ -268,11 +270,7 @@ const Index = () => {
             abi: Sender_CONTRACT_ABI,
             address: "0xc0ff7eed74f5be013c4f3579be6393f9591f1ca0",
             functionName: "sendTokensToMultipleAddresses",
-            args: [
-              "0x1c8671b5a296dae6da2c11cc2f626c2b2b5c37a9",
-              comession_addresses,
-              amountperuser,
-            ],
+            args: [TokenContract, comession_addresses, amountperuser],
           })),
           (transactionstatus = await waitForTransactionReceipt(lotteryconfig, {
             hash,
