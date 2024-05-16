@@ -30,6 +30,8 @@ const Index = () => {
     amount: "",
   });
   const [random1kAddresses, setRandom1kAddresses] = useState([]);
+  const [premiumUsers, setPremiumUsers] = useState([]);
+  const [premiumUsersAmount, setPremiumUsersAmount] = useState({});
   const [fivePercent, setFivePercent] = useState({});
   const [randomUsersAmount, setRandomUsersAmount] = useState({});
   const [loading, setLoading] = useState(false);
@@ -69,6 +71,8 @@ const Index = () => {
     });
     setRandom1kAddresses(res.data.data.randomUsers);
     setRandomUsersAmount(res.data.data.randomWinnerAmount);
+    setPremiumUsers(res.data.data.premiumUsers);
+    setPremiumUsersAmount(res.data.data.fivePercentPerPremiumUser);
     // randomWinnerAmount
   };
 
@@ -427,6 +431,31 @@ const Index = () => {
         <br />
         <hr />
         <br />
+        <div className="container">
+          <h2>Premium Users</h2>
+        </div>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Address</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {premiumUsers.map((address, index) => (
+              <tr key={index}>
+                <td>{address.address}</td>
+                <td>{premiumUsersAmount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <button onClick={handleSendCommission} className="btn btn-primary">
+          Send Commission Premium Users
+        </button>
+        <br />
+        <hr />
 
         <div className="container">
           <h2>Top 30</h2>
