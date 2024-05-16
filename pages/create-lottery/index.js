@@ -78,15 +78,15 @@ const Index = () => {
       const unixEpochTime = moment(formData.expiry).unix();
       const lotteryOperator = address;
       const ticket = formData.ticketPrice.toString();
-      const firstWinner = parseUnits(formData.firstPrize.toString(), 18);
+      const firstWinnerprize = parseUnits(formData.firstPrize.toString(), 6);
       const hash = await writeContract(lotteryconfig, {
         abi: LOTTERY_REFERRAL_ABI,
         address: lotteryContract,
         functionName: "createLottery",
         args: [
           lotteryOperator.toString(),
-          firstWinner,
-          parseEther(ticket),
+          firstWinnerprize,
+          parseUnits(ticket.toString(), 6),
           formData.maxTicketCount,
           formData.operatorCommissionPercentage,
           unixEpochTime,
