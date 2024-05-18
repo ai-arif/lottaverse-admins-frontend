@@ -2,9 +2,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { getActiveLotteries } from "@/source/services/api/methods/lottery";
 import Layout from "@/components/Layout";
-import { LOTTERY_REFERRAL_ABI } from "../../components/constants/lotteryreferralabi";
-
-// import { LOTTERY_CONTRACT_ABI } from "../../components/constants/lotteryabi";
+// import { LOTTERY_REFERRAL_ABI } from "../../components/constants/lotteryreferralabi";
+import { LOTTERY_REFERRAL_ABI } from "../../components/constants/lotterytestingabi";
 
 // import { useReadContract, useWriteContract } from "wagmi";
 import { useAccount, useDisconnect, useSwitchChain } from "wagmi";
@@ -41,6 +40,7 @@ const Index = () => {
     const res = await axios.get(
       "https://lottaverse.mainulhasan05.xyz/api/activelotteries"
     );
+
     setLotteries(res.data?.data);
   };
 
@@ -128,7 +128,9 @@ const Index = () => {
                       {lottery?.operatorCommissionPercentage}
                     </p>
                     <p className="card-text">
-                      Expiration: {lottery?.expiration}
+                      Expiration:{" "}
+                      {lottery?.expiration &&
+                        new Date(lottery?.expiration * 1000).toLocaleString()}
                     </p>
                     <button
                       type="submit"

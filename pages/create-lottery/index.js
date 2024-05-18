@@ -1,7 +1,9 @@
 import Layout from "@/components/Layout";
 import { createLottery } from "@/source/services/api/methods/lottery";
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { LOTTERY_REFERRAL_ABI } from "../../components/constants/lotteryreferralabi";
+// import { LOTTERY_REFERRAL_ABI } from "../../components/constants/lotteryreferralabi";
+import { LOTTERY_REFERRAL_ABI } from "../../components/constants/lotterytestingabi";
+
 import moment from "moment";
 // import { useReadContract, useWriteContract } from "wagmi";
 import { useAccount, useDisconnect, useSwitchChain } from "wagmi";
@@ -100,9 +102,10 @@ const Index = () => {
         const lotteryid = await readContract(lotteryconfig, {
           abi: LOTTERY_REFERRAL_ABI,
           address: lotteryContract,
-          functionName: "lotteryCount",
+          functionName: "getLotteryId",
+          args: [],
         });
-
+        console.log("lotteryid", lotteryid);
         const res = await createLottery({
           ...formData,
           transactionHash: hash,
