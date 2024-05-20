@@ -67,7 +67,7 @@ const Index = () => {
       );
       setLotteries(res.data?.data);
 
-      handleSubmitDraw(res.data?.data[0].lotteryID);
+      await handleSubmitDraw(res.data?.data[0].lotteryID,res.data?.data);
     } catch (error) {
       console.log("ERROR::", error);
     }
@@ -77,26 +77,31 @@ const Index = () => {
     getLottery();
   }, [getLottery]);
 
-  const handleSubmitDraw = async (lotteryId) => {
+useEffect(() => {
+  console.log("secondWinner", secondWinner);  
+}, [secondWinner]);
+  const handleSubmitDraw = async (lotteryId,lotteries2) => {
     try {
       // drawlottery
       const res = await axios.get(
         `https://lottaverse.mainulhasan05.xyz/api/drawhistory/${lotteryId}`);
-      console.log("RESPONSE::", res.data?.data);
+      console.log("RESPONSE::", res.data);
 
       // setAddresses(res.data?.data.top30Users);
       // setFivePercent(res.data?.data.fivePercentOfTotalPerUser);
-      // setSecondWinner({
-      //   address: res.data?.data.secondPrizeWinner,
-      //   amount: res.data?.data.secondWinnerAmount,
-      // });
-      // setThirdWinner({
-      //   address: res.data?.data.thirdPrizeWinner,
-      //   amount: res.data?.data.thirdWinnerAmount,
-      // });
+      
+      setSecondWinner({
+        address: res.data?.data?.secondWinner?.userId?.address,
+        amount: lotteries2.find((lottery) => lottery.lotteryID === lotteryId)?.prizes?.secondPrize,
+      });
+      
+      setThirdWinner({
+        address: res.data?.data?.thirdWinner?.userId?.address,
+        amount: lotteries2.find((lottery) => lottery.lotteryID === lotteryId)?.prizes?.thirdPrize,
+      });
       // setRandom1kAddresses(res.data?.data.randomUsers);
       // setRandomUsersAmount(res.data?.data.randomWinnerAmount);
-      // setPremiumUsers(res.data.data?.premiumUsers);
+      setPremiumUsers(res.data.data?.premiumUsers);
       // setPremiumUsersAmount(res.data?.data.fivePercentPerPremiumUser);
 
     } catch (error) {
@@ -146,11 +151,15 @@ const Index = () => {
   }, [address, loading]);
 
   const submitPremium = useCallback(async () => {
-
+     
+    const premiumAddresses= premiumUsers.map((addr) => {
+      return addr.userId.address;
+    });
+    
     await submitPremiumComission(
       address,
       // lotteryID,
-      // premiumUsers,
+      premiumAddresses,
       loading,
       setLoading
     );
@@ -334,10 +343,10 @@ const Index = () => {
             </tr>
           </thead>
           <tbody>
-            {premiumUsers.map((address, index) => (
+            {premiumUsers.map((user, index) => (
               <tr key={index}>
-                <td>{address.address}</td>
-                <td>{premiumUsersAmount}</td>
+                <td>{user?.userId?.address}</td>
+                <td>{0}</td>
               </tr>
             ))}
           </tbody>
