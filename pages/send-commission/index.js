@@ -79,31 +79,34 @@ const Index = () => {
   const handleSubmitDraw = async (lotteryId) => {
     try {
       // drawlottery
-      const res = await axios.post(
-        "https://lottaverse.mainulhasan05.xyz/api/drawlottery",
-        // " https://1075-103-105-211-114.ngrok-free.app/api/drawlottery",
-        {
-          lotteryId: lotteryId,
-        }
-      );
-      setAddresses(res.data?.data.top30Users);
-      setFivePercent(res.data?.data.fivePercentOfTotalPerUser);
-      setSecondWinner({
-        address: res.data?.data.secondPrizeWinner,
-        amount: res.data?.data.secondWinnerAmount,
-      });
-      setThirdWinner({
-        address: res.data?.data.thirdPrizeWinner,
-        amount: res.data?.data.thirdWinnerAmount,
-      });
-      setRandom1kAddresses(res.data?.data.randomUsers);
-      setRandomUsersAmount(res.data?.data.randomWinnerAmount);
-      setPremiumUsers(res.data.data?.premiumUsers);
-      setPremiumUsersAmount(res.data?.data.fivePercentPerPremiumUser);
-      // randomWinnerAmount
+      const res = await axios.get(
+        `https://lottaverse.mainulhasan05.xyz/api/drawhistory/${lotteryId}`);
+      console.log("RESPONSE::", res.data?.data);
+
+      // setAddresses(res.data?.data.top30Users);
+      // setFivePercent(res.data?.data.fivePercentOfTotalPerUser);
+      // setSecondWinner({
+      //   address: res.data?.data.secondPrizeWinner,
+      //   amount: res.data?.data.secondWinnerAmount,
+      // });
+      // setThirdWinner({
+      //   address: res.data?.data.thirdPrizeWinner,
+      //   amount: res.data?.data.thirdWinnerAmount,
+      // });
+      // setRandom1kAddresses(res.data?.data.randomUsers);
+      // setRandomUsersAmount(res.data?.data.randomWinnerAmount);
+      // setPremiumUsers(res.data.data?.premiumUsers);
+      // setPremiumUsersAmount(res.data?.data.fivePercentPerPremiumUser);
+
     } catch (error) {
-      console.log(error.message);
-      // alert(error)
+      if (error.response && error.response.status === 404) {
+        const message = error.response.data.message;
+        alert(message);
+      } else {
+        // Handle other errors
+        console.error("An error occurred:", error);
+        alert("An unexpected error occurred. Please try again later.");
+      }
     }
   };
 

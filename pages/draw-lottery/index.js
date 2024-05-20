@@ -61,6 +61,7 @@ const Index = () => {
         hash,
       });
       console.log(transactionstatus);
+      await handleSubmitDraw(lotteryid);
       if (transactionstatus?.status === "success") {
         alert("Lottery drawn successfully");
       } else {
