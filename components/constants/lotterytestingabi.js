@@ -437,6 +437,13 @@ export const LOTTERY_REFERRAL_ABI = [
     type: "function",
   },
   {
+    inputs: [{ internalType: "uint256", name: "_lotteryID", type: "uint256" }],
+    name: "getLotteryexpiry",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       { internalType: "uint256", name: "_lotteryId", type: "uint256" },
       { internalType: "uint256", name: "_percentage", type: "uint256" },
@@ -462,6 +469,13 @@ export const LOTTERY_REFERRAL_ABI = [
     outputs: [
       { internalType: "uint256", name: "ClaimAmount", type: "uint256" },
     ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_lotteryID", type: "uint256" }],
+    name: "getTotalRewards",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
