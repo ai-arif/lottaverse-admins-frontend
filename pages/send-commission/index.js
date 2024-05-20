@@ -87,7 +87,7 @@ useEffect(() => {
         `https://lottaverse.mainulhasan05.xyz/api/drawhistory/${lotteryId}`);
       console.log("RESPONSE::", res.data);
 
-      // setAddresses(res.data?.data.top30Users);
+      
       // setFivePercent(res.data?.data.fivePercentOfTotalPerUser);
       
       setSecondWinner({
@@ -99,8 +99,12 @@ useEffect(() => {
         address: res.data?.data?.thirdWinner?.userId?.address,
         amount: lotteries2.find((lottery) => lottery.lotteryID === lotteryId)?.prizes?.thirdPrize,
       });
-      // setRandom1kAddresses(res.data?.data.randomUsers);
-      // setRandomUsersAmount(res.data?.data.randomWinnerAmount);
+
+      
+      setRandom1kAddresses(res.data?.data?.randomWinners);
+      
+      setAddresses(res.data?.data?.leaders);
+      
       setPremiumUsers(res.data.data?.premiumUsers);
       // setPremiumUsersAmount(res.data?.data.fivePercentPerPremiumUser);
 
@@ -371,10 +375,10 @@ useEffect(() => {
             </tr>
           </thead>
           <tbody>
-            {addresses.map((address, index) => (
+            {addresses.map((user, index) => (
               <tr key={index}>
-                <td>{address.address}</td>
-                <td>{fivePercent}</td>
+                <td>{user?.userId?.address}</td>
+                <td>5%</td>
               </tr>
             ))}
           </tbody>
@@ -402,10 +406,10 @@ useEffect(() => {
               </tr>
             </thead>
             <tbody>
-              {random1kAddresses.map((address, index) => (
+              {random1kAddresses.map((user, index) => (
                 <tr key={index}>
-                  <td>{address}</td>
-                  <td>{randomUsersAmount}</td>
+                  <td>{user?.userId?.address}</td>
+                  <td>{0}</td>
                 </tr>
               ))}
             </tbody>
