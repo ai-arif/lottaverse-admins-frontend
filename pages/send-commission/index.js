@@ -26,6 +26,7 @@ const TokenContract = process.env.NEXT_PUBLIC_TOKENADDRESS;
 const LotteryContract = process.env.NEXT_PUBLIC_LOTTERY;
 
 const Index = () => {
+  const [selectedLottery, setSelectedLottery] = useState([]);
   const [lotteries, setLotteries] = useState([]);
   const [addresses, setAddresses] = useState([]);
   const [secondWinner, setSecondWinner] = useState({
@@ -118,7 +119,7 @@ const Index = () => {
     }
   };
 
-  const submitthousandwinner = useCallback(async () => {
+  const submitThousandWinner = useCallback(async () => {
     const winner_addresses = random1kAddresses.map((addr) => {
       return addr.userId.address;
     });
@@ -149,7 +150,7 @@ const Index = () => {
     await submitSender(
       address,
       comession_addresses,
-      // lotteryID,
+      selectedLottery,
       loading,
       setLoading
     );
@@ -162,7 +163,7 @@ const Index = () => {
 
     await submitPremiumComission(
       address,
-      // lotteryID,
+      selectedLottery,
       premiumAddresses,
       loading,
       setLoading
@@ -253,7 +254,7 @@ const Index = () => {
   };
   const handleRandomWinnerCommission = async () => {
     if (isConnected) {
-      await submitthousandwinner(random1kAddresses);
+      await submitThousandWinner(random1kAddresses);
     } else {
       alert("Wallet is not connected");
     }
@@ -267,6 +268,7 @@ const Index = () => {
         {/* create a select field */}
         <select
           onChange={async (e) => {
+            setSelectedLottery(e.target.value);
             await handleSubmitDraw(e.target.value);
           }}
           className="form-select">
@@ -350,7 +352,7 @@ const Index = () => {
             {premiumUsers.map((user, index) => (
               <tr key={index}>
                 <td>{user?.userId?.address}</td>
-                <td>{5}%</td>
+                <td>{10}%</td>
               </tr>
             ))}
           </tbody>
@@ -365,7 +367,7 @@ const Index = () => {
         <hr />
 
         <div className="container">
-          <h2>Top 30</h2>
+          <h2>Top 30 Leaders</h2>
         </div>
         <table className="table">
           <thead>

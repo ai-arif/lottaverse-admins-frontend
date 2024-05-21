@@ -67,7 +67,7 @@ export const thousandWinner = async (
       });
       console.log("Approval Status", approval?.status);
       (await approval?.status) === "success"
-        ? alert("Commission Approval Successfully")
+        ? alert("Commission Approved Successfully")
         : alert("Transaction rejected for Approval");
       //   const hash = await writeContract(lotteryconfig, {
       //     abi: Sender_CONTRACT_ABI,

@@ -17,13 +17,14 @@ const lotteryContract = process.env.NEXT_PUBLIC_LOTTERY;
 
 export const submitPremiumComission = async (
   address,
-  // lotteryID,
+  lotteryID,
   premiumAddresses,
   // premiumAmount,
   loading,
   setLoading
 ) => {
   try {
+    
     setLoading({ ...loading, premimumComissionLoading: true });
     // const comession_addresses = premiumUsers?.map((addr) => {
     //   return addr?.address;
@@ -43,7 +44,7 @@ export const submitPremiumComission = async (
       abi: LOTTERY_REFERRAL_ABI,
       address: lotteryContract,
       functionName: "getPercentageAmount",
-      args: [2, 500],
+      args: [lotteryID, 1000],
     });
 
     console.log("This is Percentages", premimumPercentages);
