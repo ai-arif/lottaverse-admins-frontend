@@ -105,6 +105,8 @@ const Index = () => {
       setAddresses(res.data?.data?.leaders);
 
       setPremiumUsers(res.data.data?.premiumUsers);
+
+      setRandomUsersAmount(res.data?.data?.randomWinners[0]?.amount);
       // setPremiumUsersAmount(res.data?.data.fivePercentPerPremiumUser);
     } catch (error) {
       if (error.response && error.response.status === 404) {
@@ -409,7 +411,7 @@ const Index = () => {
               {random1kAddresses.map((user, index) => (
                 <tr key={index}>
                   <td>{user?.userId?.address}</td>
-                  <td>randomUsersAmount</td>
+                  <td>{randomUsersAmount}</td>
                 </tr>
               ))}
             </tbody>
