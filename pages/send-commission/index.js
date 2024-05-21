@@ -89,24 +89,22 @@ const Index = () => {
       // setFivePercent(res.data?.data.fivePercentOfTotalPerUser);
 
       setSecondWinner({
-        address: res.data?.data?.secondWinner?.userId?.address,
-        amount: lotteries2.find((lottery) => lottery.lotteryID === lotteryId)
-          ?.prizes?.secondPrize,
+        address: res.data?.data?.drawHistory?.secondWinner?.userId?.address,
+        amount: res.data?.data?.lottery?.prizes?.secondPrize  
       });
 
       setThirdWinner({
-        address: res.data?.data?.thirdWinner?.userId?.address,
-        amount: lotteries2.find((lottery) => lottery.lotteryID === lotteryId)
-          ?.prizes?.thirdPrize,
+        address: res.data?.data?.drawHistory?.thirdWinner?.userId?.address,
+        amount: res.data?.data?.lottery?.prizes?.thirdPrize
       });
 
-      setRandom1kAddresses(res.data?.data?.randomWinners);
+      setRandom1kAddresses(res.data?.data?.drawHistory?.randomWinners);
 
-      setAddresses(res.data?.data?.leaders);
+      setAddresses(res.data?.data?.drawHistory?.leaders);
 
-      setPremiumUsers(res.data.data?.premiumUsers);
+      setPremiumUsers(res.data?.data?.drawHistory?.premiumUsers);
 
-      setRandomUsersAmount(res.data?.data?.randomWinners[0]?.amount);
+      setRandomUsersAmount(res.data?.data?.lottery?.prizes?.otherPrizes/res.data?.data?.drawHistory?.randomWinners?.length);
       // setPremiumUsersAmount(res.data?.data.fivePercentPerPremiumUser);
     } catch (error) {
       if (error.response && error.response.status === 404) {
