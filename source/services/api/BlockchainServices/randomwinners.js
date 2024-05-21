@@ -199,7 +199,7 @@ export const thousandWinner = async (
       alert("Error: Not Enough Balance to Send rewards");
     }
   } catch (error) {
-    alert(error?.message?.split(".")[0]);
+    alert(error?.message);
   } finally {
     setLoading({ ...loading, randomComissionLoading: false });
   }
