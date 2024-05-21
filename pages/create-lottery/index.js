@@ -52,7 +52,7 @@ const Index = () => {
     firstPrize: "",
     secondPrize: "",
     thirdPrize: "",
-    fourthPrize: "",
+    // fourthPrize: "",
     otherPrizes: "",
     maxTicketCount: "",
     ticketPrice: "",
@@ -225,7 +225,7 @@ const Index = () => {
                   value={formData.thirdPrize}
                 />
               </div>
-              <div className="form-group">
+              {/* <div className="form-group">
                 <label htmlFor="fourthPrize">Fourth Prize ($)</label>
                 <input
                   type="text"
@@ -235,7 +235,7 @@ const Index = () => {
                   onChange={handleChange}
                   value={formData.fourthPrize}
                 />
-              </div>
+              </div> */}
               <div className="form-group">
                 <label htmlFor="otherPrizes">
                   Other Lucky Winners Prize ($)
@@ -271,7 +271,7 @@ const Index = () => {
                   value={formData.maxTicketCount}
                 />
               </div>
-              <div className="form-group">
+              {/* <div className="form-group">
                 <label htmlFor="operatorcommissionpercentage">
                   Operator Commission Percentage
                 </label>
@@ -283,7 +283,7 @@ const Index = () => {
                   onChange={handleChange}
                   value={formData.operatorCommissionPercentage}
                 />
-              </div>
+              </div> */}
               <button
                 type="submit"
                 className="btn btn-primary mt-3"

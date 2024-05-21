@@ -104,7 +104,7 @@ const Index = () => {
 
       setPremiumUsers(res.data?.data?.drawHistory?.premiumUsers);
 
-      setRandomUsersAmount(res.data?.data?.lottery?.prizes?.otherPrizes/res.data?.data?.drawHistory?.randomWinners?.length);
+      setRandomUsersAmount(res.data?.data?.lottery?.prizes?.otherPrizes);
       // setPremiumUsersAmount(res.data?.data.fivePercentPerPremiumUser);
     } catch (error) {
       if (error.response && error.response.status === 404) {
