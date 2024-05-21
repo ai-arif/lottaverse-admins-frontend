@@ -43,13 +43,15 @@ export const submitPremiumComission = async (
       abi: LOTTERY_REFERRAL_ABI,
       address: lotteryContract,
       functionName: "getPercentageAmount",
-      args: [5, 500],
+      args: [2, 500],
     });
 
-    console.log(premimumPercentages)
-    
+    console.log("This is Percentages", premimumPercentages);
+    console.log(
+      "This is length of the premimum addresses",
+      premiumAddresses.length
+    );
 
-   
     const balance = await readContract(lotteryconfig, {
       abi: usdt,
       address: TokenContract,
@@ -57,8 +59,10 @@ export const submitPremiumComission = async (
       args: [address],
     });
     console.log("balance of Admin Account", balance);
-    const amountperuser = premimumPercentages / premiumAddresses.length;
+    const amountperuser = Number(premimumPercentages) / premiumAddresses.length;
+    console.log("This is amount per Percentages", amountperuser);
     const approvalAmount = premimumPercentages;
+    console.log(approvalAmount);
     // const approvalAmount = 50000000;
 
     if (Number(balance) >= approvalAmount) {
@@ -77,6 +81,11 @@ export const submitPremiumComission = async (
         hash: Approve,
       });
       console.log("Approval Status", approval?.status);
+
+      (await approval?.status) === "success"
+        ? alert("Commission Approval Successfully")
+        : alert("Transaction rejected for Approval");
+
       // const hash = await writeContract(lotteryconfig, {
       //   abi: Sender_CONTRACT_ABI,
       //   address: Sender,
@@ -118,7 +127,7 @@ export const submitPremiumComission = async (
       //     1000000,
       //   ],
       // });
-      
+
       const hash = await writeContract(lotteryconfig, {
         abi: Sender_CONTRACT_ABI,
         address: Sender,

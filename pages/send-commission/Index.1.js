@@ -1,31 +1,17 @@
 import Layout from "@/components/Layout";
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import { Sender_CONTRACT_ABI } from "../../components/constants/Senderabi";
-import { usdt } from "../../components/constants/usdtabi";
 import { LOTTERY_REFERRAL_ABI } from "../../components/constants/lotterytestingabi";
-
-// import { LOTTERY_CONTRACT_ABI } from "../../components/constants/lotteryabi";
-
-// import { useReadContract, useWriteContract } from "wagmi";
-import { useAccount, useDisconnect, useSwitchChain } from "wagmi";
-import {
-  readContract,
-  writeContract,
-  waitForTransactionReceipt,
-  simulateContract,
-} from "@wagmi/core";
-import { useWaitForTransactionReceipt } from "wagmi";
+import { useAccount } from "wagmi";
+import { readContract } from "@wagmi/core";
 import { lotteryconfig } from "../_app";
 import { submitwinner } from "@/source/services/api/BlockchainServices";
 import { submitPremiumComission } from "@/source/services/api/BlockchainServices/premiumuser";
 import { submitSender } from "@/source/services/api/BlockchainServices/sendercommission";
 import { thousandWinner } from "@/source/services/api/BlockchainServices/randomwinners";
+import { LotteryContract } from ".";
 
-const TokenContract = process.env.NEXT_PUBLIC_TOKENADDRESS;
-const LotteryContract = process.env.NEXT_PUBLIC_LOTTERY;
-
-const Index = () => {
+export const Index = () => {
   const [lotteries, setLotteries] = useState([]);
   const [addresses, setAddresses] = useState([]);
   const [secondWinner, setSecondWinner] = useState({
@@ -72,6 +58,15 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
+    const premimumPercentages = readContract(lotteryconfig, {
+      abi: LOTTERY_REFERRAL_ABI,
+      address: LotteryContract,
+      functionName: "getPercentageAmount",
+      args: [5, 500],
+    });
+  }, [premimumPercentages]);
+
+  useEffect(() => {
     getLottery();
   }, [getLottery]);
 
@@ -87,7 +82,6 @@ const Index = () => {
       console.log("RESPONSE::", res.data);
 
       // setFivePercent(res.data?.data.fivePercentOfTotalPerUser);
-
       setSecondWinner({
         address: res.data?.data?.secondWinner?.userId?.address,
         amount: lotteries2.find((lottery) => lottery.lotteryID === lotteryId)
@@ -127,13 +121,13 @@ const Index = () => {
         winner_addresses,
         setLoading,
         loading,
-        address,
-        randomUsersAmount
+        address
+        // randomUsersAmount
       );
     } catch (error) {
       console.log(error);
     }
-  }, [address, loading, random1kAddresses, randomUsersAmount]);
+  }, [address, loading, random1kAddresses]);
 
   const submitSenderComission = useCallback(async () => {
     // address,
@@ -141,7 +135,6 @@ const Index = () => {
     //   //   lotteryID,
     //   loading,
     //   setLoading;
-
     const comession_addresses = addresses.map((addr) => {
       return addr?.userId?.address;
     });
@@ -350,7 +343,7 @@ const Index = () => {
             {premiumUsers.map((user, index) => (
               <tr key={index}>
                 <td>{user?.userId?.address}</td>
-                <td>{5}%</td>
+                <td>{precentagesAmount}%</td>
               </tr>
             ))}
           </tbody>
@@ -409,7 +402,7 @@ const Index = () => {
               {random1kAddresses.map((user, index) => (
                 <tr key={index}>
                   <td>{user?.userId?.address}</td>
-                  <td>randomUsersAmount</td>
+                  <td>{0}</td>
                 </tr>
               ))}
             </tbody>
@@ -428,5 +421,3 @@ const Index = () => {
     </Layout>
   );
 };
-
-export default Index;
