@@ -24,7 +24,7 @@ export const submitPremiumComission = async (
   setLoading
 ) => {
   try {
-    
+    console.log("LotteryID", lotteryID);
     setLoading({ ...loading, premimumComissionLoading: true });
     // const comession_addresses = premiumUsers?.map((addr) => {
     //   return addr?.address;

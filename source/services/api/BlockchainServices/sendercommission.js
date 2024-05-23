@@ -18,12 +18,12 @@ const lotteryContract = process.env.NEXT_PUBLIC_LOTTERY;
 export const submitSender = async (
   address,
   commession_addresses,
-    lotteryID,
+  lotteryID,
   loading,
   setLoading
 ) => {
   try {
-    
+    console.log("lotteryID", lotteryID);
     setLoading({ ...loading, topComissionLoading: true });
     // const commession_addresses = premiumUsers?.map((addr) => {
     //   return addr?.address;

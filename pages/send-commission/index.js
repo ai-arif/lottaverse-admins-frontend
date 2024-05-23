@@ -42,6 +42,7 @@ const Index = () => {
   // const [premiumUsersAmount, setPremiumUsersAmount] = useState({});
   // const [fivePercent, setFivePercent] = useState({});
   const [randomUsersAmount, setRandomUsersAmount] = useState({});
+  const [getLotteryLodding, setLotteryLodding] = useState(false);
   // const [loading, setLoading] = useState(false);
   const [loading, setLoading] = useState({
     secondComissionLoading: false,
@@ -66,7 +67,7 @@ const Index = () => {
       );
       setLotteries(res.data?.data);
 
-      await handleSubmitDraw(res.data?.data[0].lotteryID, res.data?.data);
+      // await handleSubmitDraw(res.data?.data[0].lotteryID, res.data?.data);
     } catch (error) {
       console.log("ERROR::", error);
     }
@@ -80,6 +81,7 @@ const Index = () => {
     console.log("secondWinner", secondWinner);
   }, [secondWinner]);
   const handleSubmitDraw = async (lotteryId, lotteries2) => {
+    console.log("lotteryId", lotteryId);
     try {
       // drawlottery
       const res = await axios.get(
@@ -91,12 +93,12 @@ const Index = () => {
 
       setSecondWinner({
         address: res.data?.data?.drawHistory?.secondWinner?.userId?.address,
-        amount: res.data?.data?.lottery?.prizes?.secondPrize  
+        amount: res.data?.data?.lottery?.prizes?.secondPrize,
       });
 
       setThirdWinner({
         address: res.data?.data?.drawHistory?.thirdWinner?.userId?.address,
-        amount: res.data?.data?.lottery?.prizes?.thirdPrize
+        amount: res.data?.data?.lottery?.prizes?.thirdPrize,
       });
 
       setRandom1kAddresses(res.data?.data?.drawHistory?.randomWinners);
@@ -154,7 +156,7 @@ const Index = () => {
       loading,
       setLoading
     );
-  }, [address, addresses, loading]);
+  }, [address, addresses, loading, selectedLottery]);
 
   const submitPremium = useCallback(async () => {
     const premiumAddresses = premiumUsers.map((addr) => {
@@ -168,7 +170,7 @@ const Index = () => {
       loading,
       setLoading
     );
-  }, [address, loading, premiumUsers]);
+  }, [address, loading, premiumUsers, selectedLottery]);
 
   const sendwinnerprize = useCallback(
     async (winner, amount, second) => {
@@ -204,7 +206,7 @@ const Index = () => {
   };
 
   const handlePremiumCommission = async () => {
-    console.log("send commission");
+    console.log("send commission lottery ID", lotteries);
     if (isConnected) {
       await submitPremium();
     } else {
@@ -261,19 +263,36 @@ const Index = () => {
     // console.log(random1kAddresses);
     // console.log(randomUsersAmount);
   };
+  const getlotterydetails = async (e) => {
+    try {
+      setLotteryLodding(true);
+      setSelectedLottery(e.target.value);
+      // console.log("selectedLottery", selectedLottery);
+      console.log("Target value", e.target.value);
+      await handleSubmitDraw(e.target.value);
+      setLotteryLodding(false);
+    } catch (error) {
+      console.log(error);
+      alert(error);
+      setLotteryLodding(false);
+    }
+  };
+
   return (
     <Layout>
       <div className="container">
         <h1>Send Commission</h1>
         {/* create a select field */}
         <select
-          onChange={async (e) => {
-            setSelectedLottery(e.target.value);
-            await handleSubmitDraw(e.target.value);
-          }}
+          // defaultValue={10}
+          onChange={getlotterydetails}
           className="form-select">
+          <option value={""} hidden>
+            select Lottery ID
+          </option>
           {lotteries.map((lottery) => (
             <option key={lottery.ID} value={lottery.lotteryID}>
+              {console.log("getID", lottery)}
               {lottery.lotteryID}
             </option>
           ))}
@@ -281,151 +300,159 @@ const Index = () => {
 
         <br />
         <br />
-        <div className="container">
-          <h2>Second Winner</h2>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Address</th>
-                <th>Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{secondWinner?.address}</td>
-                <td>{secondWinner?.amount}</td>
-              </tr>
-            </tbody>
-          </table>
-          {/* send commision button */}
-          <button
-            onClick={() => handleSecondWinnerCommission("second")}
-            className="btn btn-primary">
-            {secondComissionLoading
-              ? "Loading..."
-              : "Send Commission Second Winner"}
-          </button>
-        </div>
-        <br />
-        <hr />
-        <br />
+        {getLotteryLodding ? (
+          <div>Loading....</div>
+        ) : (
+          <>
+            <div className="container">
+              <h2>Second Winner</h2>
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Address</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{secondWinner?.address}</td>
+                    <td>{secondWinner?.amount}</td>
+                  </tr>
+                </tbody>
+              </table>
+              {/* send commision button */}
+              <button
+                onClick={() => handleSecondWinnerCommission("second")}
+                className="btn btn-primary">
+                {secondComissionLoading
+                  ? "Loading..."
+                  : "Send Commission Second Winner"}
+              </button>
+            </div>
+            <br />
+            <hr />
+            <br />
 
-        <div className="container">
-          <h2>Third Winner</h2>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Address</th>
-                <th>Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{thirdWinner?.address}</td>
-                <td>{thirdWinner?.amount}</td>
-              </tr>
-            </tbody>
-          </table>
-          {/* send commision button */}
-          <button
-            onClick={() => handleThirdWinnerCommission("third")}
-            className="btn btn-primary">
-            {thirdComissionLoading
-              ? "Loading..."
-              : "Send Commission Third Winner"}
-          </button>
-        </div>
-        <br />
-        <hr />
-        <br />
-        <div className="container">
-          <h2>Premium Users</h2>
-        </div>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Address</th>
-              <th>Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {premiumUsers.map((user, index) => (
-              <tr key={index}>
-                <td>{user?.userId?.address}</td>
-                <td>{10}%</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        <button onClick={handlePremiumCommission} className="btn btn-primary">
-          {premimumComissionLoading
-            ? "Loading..."
-            : "Send Commission Premium Users"}
-        </button>
-        <br />
-        <hr />
-
-        <div className="container">
-          <h2>Top 30 Leaders</h2>
-        </div>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Address</th>
-              <th>Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {addresses.map((user, index) => (
-              <tr key={index}>
-                <td>{user?.userId?.address}</td>
-                <td>{5}%</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        <button onClick={handleSendCommission} className="btn btn-primary">
-          {topComissionLoading ? "Loading..." : "Send Commission top30"}
-        </button>
-        <br />
-        <hr />
-
-        <div className="container">
-          <br />
-          <hr />
-          <br />
-
-          <div className="container">
-            <h2>Random 1k Winners</h2>
-          </div>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Address</th>
-                <th>Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {random1kAddresses.map((user, index) => (
-                <tr key={index}>
-                  <td>{user?.userId?.address}</td>
-                  <td>{randomUsersAmount}</td>
+            <div className="container">
+              <h2>Third Winner</h2>
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Address</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{thirdWinner?.address}</td>
+                    <td>{thirdWinner?.amount}</td>
+                  </tr>
+                </tbody>
+              </table>
+              {/* send commision button */}
+              <button
+                onClick={() => handleThirdWinnerCommission("third")}
+                className="btn btn-primary">
+                {thirdComissionLoading
+                  ? "Loading..."
+                  : "Send Commission Third Winner"}
+              </button>
+            </div>
+            <br />
+            <hr />
+            <br />
+            <div className="container">
+              <h2>Premium Users</h2>
+            </div>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Address</th>
+                  <th>Amount</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <button
-            onClick={handleRandomWinnerCommission}
-            className="btn btn-primary">
-            {randomComissionLoading
-              ? "Loading..."
-              : "Send Commission 1k Winners"}
-          </button>
-          <br />
-          <hr />
-        </div>
+              </thead>
+              <tbody>
+                {premiumUsers.map((user, index) => (
+                  <tr key={index}>
+                    <td>{user?.userId?.address}</td>
+                    <td>{10}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <button
+              onClick={handlePremiumCommission}
+              className="btn btn-primary">
+              {premimumComissionLoading
+                ? "Loading..."
+                : "Send Commission Premium Users"}
+            </button>
+            <br />
+            <hr />
+
+            <div className="container">
+              <h2>Top 30 Leaders</h2>
+            </div>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Address</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {addresses.map((user, index) => (
+                  <tr key={index}>
+                    <td>{user?.userId?.address}</td>
+                    <td>{5}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <button onClick={handleSendCommission} className="btn btn-primary">
+              {topComissionLoading ? "Loading..." : "Send Commission top30"}
+            </button>
+            <br />
+            <hr />
+
+            <div className="container">
+              <br />
+              <hr />
+              <br />
+
+              <div className="container">
+                <h2>Random 1k Winners</h2>
+              </div>
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Address</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {random1kAddresses.map((user, index) => (
+                    <tr key={index}>
+                      <td>{user?.userId?.address}</td>
+                      <td>{randomUsersAmount}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <button
+                onClick={handleRandomWinnerCommission}
+                className="btn btn-primary">
+                {randomComissionLoading
+                  ? "Loading..."
+                  : "Send Commission 1k Winners"}
+              </button>
+              <br />
+              <hr />
+            </div>
+          </>
+        )}
       </div>
     </Layout>
   );
