@@ -260,7 +260,6 @@ export const LOTTERY_REFERRAL_ABI = [
     name: "TicketsBought",
     type: "event",
   },
-  { stateMutability: "payable", type: "fallback" },
   {
     inputs: [
       {
@@ -284,8 +283,8 @@ export const LOTTERY_REFERRAL_ABI = [
   },
   {
     inputs: [
+      { internalType: "contract IERC20", name: "token", type: "address" },
       { internalType: "uint256", name: "_lotteryId", type: "uint256" },
-      { internalType: "uint256", name: "_randomNumber", type: "uint256" },
       { internalType: "uint256", name: "requestId", type: "uint256" },
     ],
     name: "DrawLotteryWinner",
@@ -364,13 +363,6 @@ export const LOTTERY_REFERRAL_ABI = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "getContractBalance",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [{ internalType: "uint256", name: "_lotteryId", type: "uint256" }],
     name: "getLotteryDetails",
     outputs: [
@@ -386,6 +378,7 @@ export const LOTTERY_REFERRAL_ABI = [
           },
           { internalType: "uint256", name: "expiration", type: "uint256" },
           { internalType: "address", name: "lotteryWinner", type: "address" },
+          { internalType: "uint256", name: "winnerTicketNo", type: "uint256" },
           { internalType: "uint256", name: "firstPrize", type: "uint256" },
           { internalType: "uint256", name: "ticketCount", type: "uint256" },
           {
@@ -419,7 +412,6 @@ export const LOTTERY_REFERRAL_ABI = [
           { internalType: "uint256", name: "lotteryId", type: "uint256" },
           { internalType: "bool", name: "fulfilled", type: "bool" },
           { internalType: "bool", name: "exists", type: "bool" },
-          { internalType: "uint256", name: "randomNumber", type: "uint256" },
         ],
         internalType: "struct Lottery.LotteryStatus",
         name: "",
@@ -473,9 +465,42 @@ export const LOTTERY_REFERRAL_ABI = [
     type: "function",
   },
   {
+    inputs: [
+      { internalType: "address", name: "_address", type: "address" },
+      { internalType: "uint256", name: "_lotteryID", type: "uint256" },
+    ],
+    name: "getTicketAmounts",
+    outputs: [
+      { internalType: "uint256", name: "tokenAmountInvested", type: "uint256" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "_address", type: "address" },
+      { internalType: "uint256", name: "_lotteryID", type: "uint256" },
+    ],
+    name: "getTicketHolds",
+    outputs: [
+      { internalType: "uint256", name: "ticketholds", type: "uint256" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [{ internalType: "uint256", name: "_lotteryID", type: "uint256" }],
     name: "getTotalRewards",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_lotteryID", type: "uint256" }],
+    name: "getWithdrawLotteryAmount",
+    outputs: [
+      { internalType: "uint256", name: "ownerAmount", type: "uint256" },
+    ],
     stateMutability: "view",
     type: "function",
   },
@@ -486,6 +511,15 @@ export const LOTTERY_REFERRAL_ABI = [
     ],
     name: "getlotteryHolder",
     outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_lotteryId", type: "uint256" }],
+    name: "getwinnerIndex",
+    outputs: [
+      { internalType: "uint256", name: "winnerTicketNumber", type: "uint256" },
+    ],
     stateMutability: "view",
     type: "function",
   },
@@ -512,38 +546,7 @@ export const LOTTERY_REFERRAL_ABI = [
   },
   {
     inputs: [
-      { internalType: "address payable", name: "recipient", type: "address" },
-    ],
-    name: "sendETH",
-    outputs: [],
-    stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "address", name: "to", type: "address" },
-      { internalType: "uint256", name: "amount", type: "uint256" },
-    ],
-    name: "sendETH",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
       { internalType: "contract IERC20", name: "token", type: "address" },
-      { internalType: "address", name: "to", type: "address" },
-      { internalType: "uint256", name: "amount", type: "uint256" },
-    ],
-    name: "sendToken",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "contract IERC20", name: "token", type: "address" },
-      { internalType: "address", name: "from", type: "address" },
       { internalType: "address", name: "to", type: "address" },
       { internalType: "uint256", name: "amount", type: "uint256" },
     ],
@@ -566,5 +569,24 @@ export const LOTTERY_REFERRAL_ABI = [
     stateMutability: "nonpayable",
     type: "function",
   },
-  { stateMutability: "payable", type: "receive" },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_unixTimestamp", type: "uint256" },
+      { internalType: "uint256", name: "_lotteryID", type: "uint256" },
+    ],
+    name: "updateExpriyDate",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_lotteryID", type: "uint256" },
+      { internalType: "uint256", name: "_maxTickets", type: "uint256" },
+    ],
+    name: "updateMaxTicket",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
 ];
