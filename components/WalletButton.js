@@ -50,6 +50,7 @@ export default function WalletButton() {
               onClick={(e) => {
                 e.preventDefault();
                 switchChain?.(x[0]?.id);
+                open();
               }}>
               {console.log("CHAIN", x, chainId)}
               {isPending === x[0]?.id

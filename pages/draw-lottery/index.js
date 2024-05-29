@@ -15,6 +15,7 @@ import {
 import { lotteryconfig } from "../_app";
 
 const lotteryContract = process.env.NEXT_PUBLIC_LOTTERY;
+const TokenAddress = process.env.NEXT_PUBLIC_TOKENADDRESS;
 
 const style = {
   backgroundColor: "skyblue",
@@ -37,11 +38,15 @@ const Index = () => {
     getLottery();
   }, []);
   const getLottery = async () => {
-    const res = await axios.get(
-      "https://lottaverse.mainulhasan05.xyz/api/activelotteries"
-    );
+    try {
+      const res = await axios.get(
+        "https://lottaverse.mainulhasan05.xyz/api/activelotteries"
+      );
 
-    setLotteries(res.data?.data);
+      setLotteries(res.data?.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const submitdrawLottery = useCallback(async (lotteryid) => {
@@ -50,12 +55,12 @@ const Index = () => {
         ...prevStates,
         [lotteryid]: true,
       }));
-      const requestid = Number(lotteryid);
+      const lotteryID = Number(lotteryid);
       const hash = await writeContract(lotteryconfig, {
         abi: LOTTERY_REFERRAL_ABI,
         address: lotteryContract,
         functionName: "DrawLotteryWinner",
-        args: [Number(lotteryid), 0, requestid],
+        args: [TokenAddress, lotteryID, lotteryID],
       });
       const transactionstatus = await waitForTransactionReceipt(lotteryconfig, {
         hash,
