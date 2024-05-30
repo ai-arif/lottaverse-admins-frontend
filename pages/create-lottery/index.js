@@ -56,7 +56,7 @@ const Index = () => {
     otherPrizes: "",
     maxTicketCount: "",
     ticketPrice: "",
-    operatorCommissionPercentage: "",
+    operatorCommissionPercentage: 18,
     lotteryOperator: address,
   });
 
@@ -178,7 +178,7 @@ const Index = () => {
                   value={formData.lotteryType}>
                   <option value="">Select</option>
                   <option value="easy">Easy</option>
-                  <option value="super">Super</option>
+                  {/* <option value="super">Super</option> */}
                   <option value="superx">SuperX</option>
                 </select>
               </div>

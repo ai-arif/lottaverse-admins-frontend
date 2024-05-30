@@ -73,7 +73,7 @@ const Index = () => {
         alert("Transection rejected");
       }
     } catch (error) {
-      alert(error?.message?.split(".")[0]);
+      alert(error?.message);
     } finally {
       setLoading((prevStates) => ({
         ...prevStates,

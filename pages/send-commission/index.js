@@ -63,7 +63,7 @@ const Index = () => {
   const getLottery = useCallback(async () => {
     try {
       const res = await axios.get(
-        "https://lottaverse.mainulhasan05.xyz/api/activelotteries"
+        "https://lottaverse.mainulhasan05.xyz/api/admin/activelotteries"
       );
       setLotteries(res.data?.data);
 
@@ -94,11 +94,13 @@ const Index = () => {
       setSecondWinner({
         address: res.data?.data?.drawHistory?.secondWinner?.userId?.address,
         amount: res.data?.data?.lottery?.prizes?.secondPrize,
+        commission_sent:res.data?.data?.drawHistory?.secondWinner?.commission_sent
       });
 
       setThirdWinner({
         address: res.data?.data?.drawHistory?.thirdWinner?.userId?.address,
         amount: res.data?.data?.lottery?.prizes?.thirdPrize,
+        commission_sent:res.data?.data?.drawHistory?.thirdWinner?.commission_sent
       });
 
       setRandom1kAddresses(res.data?.data?.drawHistory?.randomWinners);
@@ -311,12 +313,17 @@ const Index = () => {
                   <tr>
                     <th>Address</th>
                     <th>Amount</th>
+                    <th>Payment Sent</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>{secondWinner?.address}</td>
                     <td>{secondWinner?.amount}</td>
+                    <td>{secondWinner?.commission_sent? 
+                    <span className="fw-bold" style={{color:"green"}}>Yes</span>:
+                    <span className="fw-bold" style={{color:"red"}}>No</span>
+                    }</td>
                   </tr>
                 </tbody>
               </table>
@@ -340,12 +347,17 @@ const Index = () => {
                   <tr>
                     <th>Address</th>
                     <th>Amount</th>
+                    <th>Payment Sent</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>{thirdWinner?.address}</td>
                     <td>{thirdWinner?.amount}</td>
+                    <td>{thirdWinner?.commission_sent? 
+                    <span className="fw-bold" style={{color:"green"}}>Yes</span>:
+                    <span className="fw-bold" style={{color:"red"}}>No</span>
+                    }</td>
                   </tr>
                 </tbody>
               </table>
@@ -361,7 +373,7 @@ const Index = () => {
             <br />
             <hr />
             <br />
-            <div className="container">
+            {/* <div className="container">
               <h2>Premium Users</h2>
             </div>
             <table className="table">
@@ -389,7 +401,7 @@ const Index = () => {
                 : "Send Commission Premium Users"}
             </button>
             <br />
-            <hr />
+            <hr /> */}
 
             <div className="container">
               <h2>Top 30 Leaders</h2>
@@ -399,6 +411,7 @@ const Index = () => {
                 <tr>
                   <th>Address</th>
                   <th>Amount</th>
+                  <th>Payment Sent</th>
                 </tr>
               </thead>
               <tbody>
@@ -406,6 +419,11 @@ const Index = () => {
                   <tr key={index}>
                     <td>{user?.userId?.address}</td>
                     <td>{5}%</td>
+                    
+                    <td>{user?.commission_sent? 
+                    <span className="fw-bold" style={{color:"green"}}>Yes</span>:
+                    <span className="fw-bold" style={{color:"red"}}>No</span>
+                    }</td>
                   </tr>
                 ))}
               </tbody>
