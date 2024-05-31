@@ -4,6 +4,9 @@ const nextConfig = {
     config.externals.push("pino-pretty", "lokijs", "encoding");
     return config;
   },
+  env:{
+    API: 'http://localhost:5000',
+  },
   reactStrictMode: true,
 };
 

@@ -295,7 +295,7 @@ const Index = () => {
           {lotteries.map((lottery) => (
             <option key={lottery.ID} value={lottery.lotteryID}>
               {console.log("getID", lottery)}
-              {lottery.lotteryID}
+             Lottery {lottery.lotteryID}
             </option>
           ))}
         </select>

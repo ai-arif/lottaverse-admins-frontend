@@ -21,6 +21,7 @@
     "react-bootstrap": "^2.10.2",
     "react-bootstrap-sidebar-menu": "^2.0.3",
     "react-dom": "^18",
+    "react-paginate": "^8.2.0",
     "sass": "^1.72.0",
     "viem": "^2.9.20",
     "wagmi": "^2.5.20"
