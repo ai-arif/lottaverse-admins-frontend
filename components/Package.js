@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Container, Table } from "react-bootstrap";
 import axios from "axios";
 import PackageEditModal from "./package_helper/PackageEditModal";
+import moment from "moment";
 
 function Package() {
   const [lotteries, setLotteries] = useState([]);
@@ -22,10 +23,10 @@ function Package() {
       console.log("ERROR::", error);
     }
   };
-    return (
+  return (
     <>
       <Container style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-      <PackageEditModal data={lotteryID} getLottery={getLottery}/>
+        <PackageEditModal data={lotteryID} getLottery={getLottery} />
         <h2>Manage Package</h2>
         <Table responsive="sm">
           <thead>
@@ -43,23 +44,30 @@ function Package() {
                 <tr key={lottery.id}>
                   <td>{index + 1}</td>
                   <td>{lottery.lotteryType}</td>
-                  <td>{lottery.expiration} </td>
-                  <td>{lottery.status}</td>
+
+                  <td>{moment.unix(lottery.expiration).format('MMMM Do YYYY, h:mm:ss a')}</td>
+
                   <td>
-                    
+                    {lottery.image ?
+                      <img src={process.env.API + lottery.image} alt="package" style={{ width: "100px" }} />
+                      : 'No Image'
+                    }
+                  </td>
+                  <td>
+
                     <button
                       type="button"
                       className="btn btn-primary"
                       onClick={() => setLotteryID(lottery)}
-                     data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>
-                    
+                      data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>
+
                   </td>
                 </tr>
               ))
             }
           </tbody>
         </Table>
-        
+
       </Container>
     </>
   );
