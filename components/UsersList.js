@@ -108,7 +108,7 @@ function UsersList() {
             handleSearchUser(e);
             setPage(1);
             setUserType('user');
-          }} type="text" className="form-control" placeholder="Search" />
+          }} type="search" className="form-control" placeholder="Search" />
         </div>
         {
           loading ?
