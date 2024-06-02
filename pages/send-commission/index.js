@@ -29,6 +29,7 @@ const Index = () => {
   const [selectedLottery, setSelectedLottery] = useState([]);
   const [lotteries, setLotteries] = useState([]);
   const [addresses, setAddresses] = useState([]);
+  const [lotteryIdSelected, setLotteryIdSelected] = useState(null);
   const [secondWinner, setSecondWinner] = useState({
     address: "",
     amount: "",
@@ -77,19 +78,21 @@ const Index = () => {
     getLottery();
   }, [getLottery]);
 
+  
+
   useEffect(() => {
     console.log("secondWinner", secondWinner);
   }, [secondWinner]);
   const handleSubmitDraw = async (lotteryId, lotteries2) => {
     console.log("lotteryId", lotteryId);
     try {
+      
       // drawlottery
       const res = await axios.get(
         `https://lottaverse.mainulhasan05.xyz/api/drawhistory/${lotteryId}`
       );
       console.log("RESPONSE::", res.data);
 
-      // setFivePercent(res.data?.data.fivePercentOfTotalPerUser);
 
       setSecondWinner({
         address: res.data?.data?.drawHistory?.secondWinner?.userId?.address,
@@ -110,6 +113,7 @@ const Index = () => {
       setPremiumUsers(res.data?.data?.drawHistory?.premiumUsers);
 
       setRandomUsersAmount(res.data?.data?.lottery?.prizes?.otherPrizes);
+      setLotteryIdSelected(lotteryId);
       // setPremiumUsersAmount(res.data?.data.fivePercentPerPremiumUser);
     } catch (error) {
       if (error.response && error.response.status === 404) {
@@ -120,6 +124,32 @@ const Index = () => {
         console.error("An error occurred:", error);
         alert("An unexpected error occurred. Please try again later.");
       }
+    }
+  };
+  // /admin/send-second-winner-commission/:lotteryId
+  const sendSecondWinnerCommission = async (lotteryId) => {
+    try {
+      const res = await axios.post(`${process.env.API}/api/admin/send-second-winner-commission/${lotteryId}`);
+      console.log("RESPONSE::", res.data);
+    } catch (error) {
+      console.log("ERROR::", error);
+    }
+  };
+  const sendThirdWinnerCommission = async (lotteryId) => {
+    try {
+      const res = await axios.post(`${process.env.API}/api/admin/send-third-winner-commission/${lotteryId}`);
+      console.log("RESPONSE::", res.data);
+    } catch (error) {
+      console.log("ERROR::", error);
+    }
+  };
+
+  const sendLeadersCommission = async (lotteryId) => {
+    try {
+      const res = await axios.post(`${process.env.API}/api/admin/send-leaders-commission/${lotteryId}`);
+      console.log("RESPONSE::", res.data);
+    } catch (error) {
+      console.log("ERROR::", error);
     }
   };
 
@@ -150,14 +180,20 @@ const Index = () => {
     const comession_addresses = addresses.map((addr) => {
       return addr?.userId?.address;
     });
-
-    await submitSender(
-      address,
-      comession_addresses,
-      selectedLottery,
-      loading,
-      setLoading
-    );
+    try {
+      await submitSender(
+        address,
+        comession_addresses,
+        selectedLottery,
+        loading,
+        setLoading
+      );
+      await sendLeadersCommission(selectedLottery);
+      await handleSubmitDraw(selectedLottery);
+    } catch (error) {
+      console.log(error);
+      
+    }
   }, [address, addresses, loading, selectedLottery]);
 
   const submitPremium = useCallback(async () => {
@@ -185,6 +221,15 @@ const Index = () => {
           loading,
           address
         );
+        if(second === "second"){
+          await sendSecondWinnerCommission(selectedLottery);
+          await handleSubmitDraw(selectedLottery);
+
+        }
+        if(second === "third"){
+          await sendThirdWinnerCommission(selectedLottery);
+          await handleSubmitDraw(selectedLottery);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -283,7 +328,7 @@ const Index = () => {
   return (
     <Layout>
       <div className="container">
-        <h1>Send Commission</h1>
+        <h1>Send Commission {lotteryIdSelected}</h1>
         {/* create a select field */}
         <select
           // defaultValue={10}

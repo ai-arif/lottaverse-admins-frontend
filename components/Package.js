@@ -14,7 +14,7 @@ function Package() {
   const getLottery = async () => {
     try {
       const res = await axios.get(
-        "https://lottaverse.mainulhasan05.xyz/api/admin/activelotteries"
+        "https://lottaverse.mainulhasan05.xyz/api/activelotteries"
       );
       setLotteries(res.data?.data);
 

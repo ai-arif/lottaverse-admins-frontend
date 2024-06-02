@@ -12,9 +12,13 @@ const PackageEditModal = ({data,getLottery}) => {
         try {
             setLoading(true);
             const formData= new FormData();
-            formData.append('image', lotteryObj.image);
-            formData.append('expiry', lotteryObj.expiry);
-            console.log("formData::", formData);
+            if(lotteryObj.image){
+                formData.append('image',lotteryObj.image);
+            }
+            if(lotteryObj.expiry){
+                formData.append('expiry',lotteryObj.expiry);
+            }
+
             const res = await axios.post(
                 `http://localhost:5000/api/admin/lottery-update/${data.lotteryID}`,
                 formData
