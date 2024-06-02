@@ -1,7 +1,7 @@
 import axios from "axios";
 import Qs from "qs";
 
-const ServerURL = "https://5cbe-116-204-154-38.ngrok-free.app/api";
+const ServerURL = "https://b81f-116-204-154-53.ngrok-free.app/api";
 // const LiveURL = "https://api.letribe.com";
 // const local = "http://192.168.50.198:8000";
 // const ngURL = "https://26c6-180-92-147-86.ap.ngrok.io";

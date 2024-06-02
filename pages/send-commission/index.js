@@ -152,19 +152,69 @@ const Index = () => {
       console.log("ERROR::", error);
     }
   };
+  // /admin/send-random-winners-commission/
+  const sendRandomWinnersCommission = async (lotteryId,addresses) => {
+    try {
+      const res = await axios.post(`${process.env.API}/api/admin/send-random-winners-commission/${lotteryId}`,{
+        addresses
+      }
+      );
+      console.log("RESPONSE::", res.data);
+      await handleSubmitDraw(lotteryId);
+    } catch (error) {
+      console.log("ERROR::", error);
+    }
+  };
 
   const submitThousandWinner = useCallback(async () => {
-    const winner_addresses = random1kAddresses.map((addr) => {
-      return addr.userId.address;
+    const winner_addresses_filter = random1kAddresses.filter((addr) => {
+      if(addr?.commission_sent === false){
+        return addr?.userId?.address;
+      }
+      else{
+        return false;
+      }
     });
+    const winner_addresses = winner_addresses_filter.map((addr) => {
+      return addr?.userId?.address;
+    });
+    console.log("winner_addresses", winner_addresses);
     try {
-      thousandWinner(
-        winner_addresses,
-        setLoading,
-        loading,
-        address,
-        randomUsersAmount
-      );
+      // if the winner_addresses length is greater than 100, then make it in 10 chunks
+      if (winner_addresses.length > 100) {
+        const chunks = Math.ceil(winner_addresses.length / 10);
+        for (let i = 0; i < chunks; i++) {
+          const start = i * 100;
+          const end = (i + 1) * 100;
+          const chunk = winner_addresses.slice(start, end);
+          
+          await thousandWinner(
+            chunk,
+            setLoading,
+            loading,
+            address,
+            randomUsersAmount
+          );
+          await sendRandomWinnersCommission(selectedLottery, chunk);
+        }
+      } else {
+        await thousandWinner(
+          winner_addresses,
+          setLoading,
+          loading,
+          address,
+          randomUsersAmount
+        );
+        await sendRandomWinnersCommission(selectedLottery, winner_addresses);
+      }
+      // await thousandWinner(
+      //   winner_addresses,
+      //   setLoading,
+      //   loading,
+      //   address,
+      //   randomUsersAmount
+      // );
+      
     } catch (error) {
       console.log(error);
     }
@@ -335,12 +385,12 @@ const Index = () => {
           onChange={getlotterydetails}
           className="form-select">
           <option value={""} hidden>
-            select Lottery ID
+            select Lottery
           </option>
           {lotteries.map((lottery) => (
             <option key={lottery.ID} value={lottery.lotteryID}>
               {console.log("getID", lottery)}
-             Lottery {lottery.lotteryID}
+             Lottery  {lottery.lotteryType} - Round {lottery.round }
             </option>
           ))}
         </select>
@@ -493,6 +543,7 @@ const Index = () => {
                   <tr>
                     <th>Address</th>
                     <th>Amount</th>
+                    <th>Payment Sent</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -500,6 +551,10 @@ const Index = () => {
                     <tr key={index}>
                       <td>{user?.userId?.address}</td>
                       <td>{randomUsersAmount}</td>
+                      <td>{user?.commission_sent? 
+                    <span className="fw-bold" style={{color:"green"}}>Yes</span>:
+                    <span className="fw-bold" style={{color:"red"}}>No</span>
+                    }</td>
                     </tr>
                   ))}
                 </tbody>
