@@ -138,6 +138,14 @@ const Index = () => {
                       {lottery?.expiration &&
                         new Date(lottery?.expiration * 1000).toLocaleString()}
                     </p>
+                    <p>
+                      {lottery?.hasDraw ? (
+                        <span className="text-success badge fs-3">Drawn</span>
+                      ) : (
+                        <span className="text-danger badge fs-3">Not Drawn</span>
+                      )
+                      }
+                    </p>
                     <button
                       type="submit"
                       className="btn btn-primary"

@@ -29,6 +29,7 @@ const Index = () => {
   const [selectedLottery, setSelectedLottery] = useState([]);
   const [lotteries, setLotteries] = useState([]);
   const [addresses, setAddresses] = useState([]);
+  const [showLimit, setShowLimit] = useState(1000);
   const [lotteryIdSelected, setLotteryIdSelected] = useState(null);
   const [secondWinner, setSecondWinner] = useState({
     address: "",
@@ -536,7 +537,18 @@ const Index = () => {
               <br />
 
               <div className="container">
+                <div className="d-flex justify-content-between">
                 <h2>Random 1k Winners</h2>
+                <select onChange={(e)=>{
+                  setShowLimit(e.target.value);
+                }} name="" id="">
+                  <option value="">Show</option>
+                  <option value="100">Show 100</option>
+                  <option value="500">Show 500</option>
+                  <option value="800">Show 800</option>
+
+                </select>
+                </div>
               </div>
               <table className="table">
                 <thead>
@@ -547,16 +559,18 @@ const Index = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {random1kAddresses.map((user, index) => (
-                    <tr key={index}>
-                      <td>{user?.userId?.address}</td>
-                      <td>{randomUsersAmount}</td>
-                      <td>{user?.commission_sent? 
+                  {
+                    random1kAddresses.slice(0,showLimit).map((user, index) => (
+                      <tr key={index}>
+                        <td>{user?.userId?.address}</td>
+                        <td>{randomUsersAmount}</td>
+                        <td>{user?.commission_sent? 
                     <span className="fw-bold" style={{color:"green"}}>Yes</span>:
                     <span className="fw-bold" style={{color:"red"}}>No</span>
                     }</td>
-                    </tr>
-                  ))}
+                      </tr>
+                    ))
+                  }
                 </tbody>
               </table>
               <button
