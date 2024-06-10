@@ -12,6 +12,7 @@ import {
   bsc,
   sepolia,
   optimismSepolia,
+  polygon,
 } from "wagmi/chains";
 import { WagmiProvider } from "wagmi";
 import WalletButton from "@/components/WalletButton";
@@ -26,13 +27,13 @@ const metadata = {
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
 
-const chains = [optimismSepolia];
+const chains = [polygon];
 export const lotteryconfig = defaultWagmiConfig({
   chains,
   projectId,
   metadata,
   transports: {
-    [optimismSepolia.id]: http(),
+    [polygon.id]: http(),
   },
 });
 

@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Sender_CONTRACT_ABI } from "../../components/constants/Senderabi";
 import { usdt } from "../../components/constants/usdtabi";
-import { LOTTERY_REFERRAL_ABI } from "../../components/constants/lotterytestingabi";
+import { LOTTERY_REFERRAL_ABI } from "@/components/constants/lotteryreferralabi";
 
 // import { LOTTERY_CONTRACT_ABI } from "../../components/constants/lotteryabi";
 
@@ -79,32 +79,30 @@ const Index = () => {
     getLottery();
   }, [getLottery]);
 
-  
-
   useEffect(() => {
     console.log("secondWinner", secondWinner);
   }, [secondWinner]);
   const handleSubmitDraw = async (lotteryId, lotteries2) => {
     console.log("lotteryId", lotteryId);
     try {
-      
       // drawlottery
       const res = await axios.get(
         `https://lottaverse.mainulhasan05.xyz/api/drawhistory/${lotteryId}`
       );
       console.log("RESPONSE::", res.data);
 
-
       setSecondWinner({
         address: res.data?.data?.drawHistory?.secondWinner?.userId?.address,
         amount: res.data?.data?.lottery?.prizes?.secondPrize,
-        commission_sent:res.data?.data?.drawHistory?.secondWinner?.commission_sent
+        commission_sent:
+          res.data?.data?.drawHistory?.secondWinner?.commission_sent,
       });
 
       setThirdWinner({
         address: res.data?.data?.drawHistory?.thirdWinner?.userId?.address,
         amount: res.data?.data?.lottery?.prizes?.thirdPrize,
-        commission_sent:res.data?.data?.drawHistory?.thirdWinner?.commission_sent
+        commission_sent:
+          res.data?.data?.drawHistory?.thirdWinner?.commission_sent,
       });
 
       setRandom1kAddresses(res.data?.data?.drawHistory?.randomWinners);
@@ -130,7 +128,9 @@ const Index = () => {
   // /admin/send-second-winner-commission/:lotteryId
   const sendSecondWinnerCommission = async (lotteryId) => {
     try {
-      const res = await axios.post(`${process.env.API}/api/admin/send-second-winner-commission/${lotteryId}`);
+      const res = await axios.post(
+        `${process.env.API}/api/admin/send-second-winner-commission/${lotteryId}`
+      );
       console.log("RESPONSE::", res.data);
     } catch (error) {
       console.log("ERROR::", error);
@@ -138,7 +138,9 @@ const Index = () => {
   };
   const sendThirdWinnerCommission = async (lotteryId) => {
     try {
-      const res = await axios.post(`${process.env.API}/api/admin/send-third-winner-commission/${lotteryId}`);
+      const res = await axios.post(
+        `${process.env.API}/api/admin/send-third-winner-commission/${lotteryId}`
+      );
       console.log("RESPONSE::", res.data);
     } catch (error) {
       console.log("ERROR::", error);
@@ -147,18 +149,22 @@ const Index = () => {
 
   const sendLeadersCommission = async (lotteryId) => {
     try {
-      const res = await axios.post(`${process.env.API}/api/admin/send-leaders-commission/${lotteryId}`);
+      const res = await axios.post(
+        `${process.env.API}/api/admin/send-leaders-commission/${lotteryId}`
+      );
       console.log("RESPONSE::", res.data);
     } catch (error) {
       console.log("ERROR::", error);
     }
   };
   // /admin/send-random-winners-commission/
-  const sendRandomWinnersCommission = async (lotteryId,addresses) => {
+  const sendRandomWinnersCommission = async (lotteryId, addresses) => {
     try {
-      const res = await axios.post(`${process.env.API}/api/admin/send-random-winners-commission/${lotteryId}`,{
-        addresses
-      }
+      const res = await axios.post(
+        `${process.env.API}/api/admin/send-random-winners-commission/${lotteryId}`,
+        {
+          addresses,
+        }
       );
       console.log("RESPONSE::", res.data);
       await handleSubmitDraw(lotteryId);
@@ -169,10 +175,9 @@ const Index = () => {
 
   const submitThousandWinner = useCallback(async () => {
     const winner_addresses_filter = random1kAddresses.filter((addr) => {
-      if(addr?.commission_sent === false){
+      if (addr?.commission_sent === false) {
         return addr?.userId?.address;
-      }
-      else{
+      } else {
         return false;
       }
     });
@@ -188,7 +193,7 @@ const Index = () => {
           const start = i * 100;
           const end = (i + 1) * 100;
           const chunk = winner_addresses.slice(start, end);
-          
+
           await thousandWinner(
             chunk,
             setLoading,
@@ -215,7 +220,6 @@ const Index = () => {
       //   address,
       //   randomUsersAmount
       // );
-      
     } catch (error) {
       console.log(error);
     }
@@ -243,7 +247,6 @@ const Index = () => {
       await handleSubmitDraw(selectedLottery);
     } catch (error) {
       console.log(error);
-      
     }
   }, [address, addresses, loading, selectedLottery]);
 
@@ -272,12 +275,11 @@ const Index = () => {
           loading,
           address
         );
-        if(second === "second"){
+        if (second === "second") {
           await sendSecondWinnerCommission(selectedLottery);
           await handleSubmitDraw(selectedLottery);
-
         }
-        if(second === "third"){
+        if (second === "third") {
           await sendThirdWinnerCommission(selectedLottery);
           await handleSubmitDraw(selectedLottery);
         }
@@ -391,7 +393,7 @@ const Index = () => {
           {lotteries.map((lottery) => (
             <option key={lottery.ID} value={lottery.lotteryID}>
               {console.log("getID", lottery)}
-             Lottery  {lottery.lotteryType} - Round {lottery.round }
+              Lottery {lottery.lotteryType} - Round {lottery.round}
             </option>
           ))}
         </select>
@@ -416,10 +418,17 @@ const Index = () => {
                   <tr>
                     <td>{secondWinner?.address}</td>
                     <td>{secondWinner?.amount}</td>
-                    <td>{secondWinner?.commission_sent? 
-                    <span className="fw-bold" style={{color:"green"}}>Yes</span>:
-                    <span className="fw-bold" style={{color:"red"}}>No</span>
-                    }</td>
+                    <td>
+                      {secondWinner?.commission_sent ? (
+                        <span className="fw-bold" style={{ color: "green" }}>
+                          Yes
+                        </span>
+                      ) : (
+                        <span className="fw-bold" style={{ color: "red" }}>
+                          No
+                        </span>
+                      )}
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -450,10 +459,17 @@ const Index = () => {
                   <tr>
                     <td>{thirdWinner?.address}</td>
                     <td>{thirdWinner?.amount}</td>
-                    <td>{thirdWinner?.commission_sent? 
-                    <span className="fw-bold" style={{color:"green"}}>Yes</span>:
-                    <span className="fw-bold" style={{color:"red"}}>No</span>
-                    }</td>
+                    <td>
+                      {thirdWinner?.commission_sent ? (
+                        <span className="fw-bold" style={{ color: "green" }}>
+                          Yes
+                        </span>
+                      ) : (
+                        <span className="fw-bold" style={{ color: "red" }}>
+                          No
+                        </span>
+                      )}
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -515,11 +531,18 @@ const Index = () => {
                   <tr key={index}>
                     <td>{user?.userId?.address}</td>
                     <td>{5}%</td>
-                    
-                    <td>{user?.commission_sent? 
-                    <span className="fw-bold" style={{color:"green"}}>Yes</span>:
-                    <span className="fw-bold" style={{color:"red"}}>No</span>
-                    }</td>
+
+                    <td>
+                      {user?.commission_sent ? (
+                        <span className="fw-bold" style={{ color: "green" }}>
+                          Yes
+                        </span>
+                      ) : (
+                        <span className="fw-bold" style={{ color: "red" }}>
+                          No
+                        </span>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -538,16 +561,18 @@ const Index = () => {
 
               <div className="container">
                 <div className="d-flex justify-content-between">
-                <h2>Random 1k Winners</h2>
-                <select onChange={(e)=>{
-                  setShowLimit(e.target.value);
-                }} name="" id="">
-                  <option value="">Show</option>
-                  <option value="100">Show 100</option>
-                  <option value="500">Show 500</option>
-                  <option value="800">Show 800</option>
-
-                </select>
+                  <h2>Random 1k Winners</h2>
+                  <select
+                    onChange={(e) => {
+                      setShowLimit(e.target.value);
+                    }}
+                    name=""
+                    id="">
+                    <option value="">Show</option>
+                    <option value="100">Show 100</option>
+                    <option value="500">Show 500</option>
+                    <option value="800">Show 800</option>
+                  </select>
                 </div>
               </div>
               <table className="table">
@@ -559,18 +584,23 @@ const Index = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {
-                    random1kAddresses.slice(0,showLimit).map((user, index) => (
-                      <tr key={index}>
-                        <td>{user?.userId?.address}</td>
-                        <td>{randomUsersAmount}</td>
-                        <td>{user?.commission_sent? 
-                    <span className="fw-bold" style={{color:"green"}}>Yes</span>:
-                    <span className="fw-bold" style={{color:"red"}}>No</span>
-                    }</td>
-                      </tr>
-                    ))
-                  }
+                  {random1kAddresses.slice(0, showLimit).map((user, index) => (
+                    <tr key={index}>
+                      <td>{user?.userId?.address}</td>
+                      <td>{randomUsersAmount}</td>
+                      <td>
+                        {user?.commission_sent ? (
+                          <span className="fw-bold" style={{ color: "green" }}>
+                            Yes
+                          </span>
+                        ) : (
+                          <span className="fw-bold" style={{ color: "red" }}>
+                            No
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
               <button

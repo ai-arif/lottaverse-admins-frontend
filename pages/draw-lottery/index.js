@@ -2,8 +2,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { getActiveLotteries } from "@/source/services/api/methods/lottery";
 import Layout from "@/components/Layout";
-// import { LOTTERY_REFERRAL_ABI } from "../../components/constants/lotteryreferralabi";
-import { LOTTERY_REFERRAL_ABI } from "../../components/constants/lotterytestingabi";
+import { LOTTERY_REFERRAL_ABI } from "../../components/constants/lotteryreferralabi";
+// import { LOTTERY_REFERRAL_ABI } from "../../components/constants/lotterytestingabi";
 
 // import { useReadContract, useWriteContract } from "wagmi";
 import { useAccount, useDisconnect, useSwitchChain } from "wagmi";
@@ -142,9 +142,10 @@ const Index = () => {
                       {lottery?.hasDraw ? (
                         <span className="text-success badge fs-3">Drawn</span>
                       ) : (
-                        <span className="text-danger badge fs-3">Not Drawn</span>
-                      )
-                      }
+                        <span className="text-danger badge fs-3">
+                          Not Drawn
+                        </span>
+                      )}
                     </p>
                     <button
                       type="submit"
