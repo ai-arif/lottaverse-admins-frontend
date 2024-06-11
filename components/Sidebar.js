@@ -1,12 +1,19 @@
 import React from "react";
 import { Accordion, Container } from "react-bootstrap";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 
 function Sidebar() {
+  const router=useRouter()
+  const handleSignOut=()=>{
+    Cookies.remove('token')
+    router.push('/')
+  }
   return (
     <>
       <div style={{ color: "white" }} className="py-4">
-        <Link href="/">
+        <Link href="/dashboard">
           <h3 className="text-center">Admin Dashboard</h3>
         </Link>
         <div
@@ -38,6 +45,11 @@ function Sidebar() {
             <Link href="/package">
               <h5>Manage Package</h5>
             </Link>
+          </div>
+          <div onClick={handleSignOut} className="px-4 py-2" style={{ backgroundColor: "#157fb9", cursor:"pointer" }}>
+            
+              <h5>Signout</h5>
+            
           </div>
         </div>
       </div>

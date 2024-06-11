@@ -6,6 +6,7 @@ const nextConfig = {
   },
   env:{
     API:"https://api.lottaverse.io",
+    // API:"http://localhost:5000",
   },
   reactStrictMode: true,
 };
