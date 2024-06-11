@@ -65,7 +65,7 @@ const Index = () => {
   const getLottery = useCallback(async () => {
     try {
       const res = await axios.get(
-        "https://lottaverse.mainulhasan05.xyz/api/admin/activelotteries"
+        `${process.env.API}/api/admin/activelotteries`
       );
       setLotteries(res.data?.data);
 
@@ -90,7 +90,7 @@ const Index = () => {
       
       // drawlottery
       const res = await axios.get(
-        `https://lottaverse.mainulhasan05.xyz/api/drawhistory/${lotteryId}`
+        `${process.env.API}/api/drawhistory/${lotteryId}`
       );
       console.log("RESPONSE::", res.data);
 

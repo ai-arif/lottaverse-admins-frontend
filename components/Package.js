@@ -14,7 +14,7 @@ function Package() {
   const getLottery = async () => {
     try {
       const res = await axios.get(
-        "https://lottaverse.mainulhasan05.xyz/api/activelotteries"
+        `${process.env.API}/api/activelotteries`
       );
       setLotteries(res.data?.data);
 
@@ -40,7 +40,7 @@ function Package() {
           </thead>
           <tbody>
             {
-              lotteries.map((lottery, index) => (
+              lotteries?.map((lottery, index) => (
                 <tr key={lottery.id}>
                   <td>{index + 1}</td>
                   <td>{lottery.lotteryType}</td>
