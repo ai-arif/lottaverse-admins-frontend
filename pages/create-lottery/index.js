@@ -1,8 +1,8 @@
 import Layout from "@/components/Layout";
 import { createLottery } from "@/source/services/api/methods/lottery";
 import React, { useState, useEffect, useCallback, useRef } from "react";
-// import { LOTTERY_REFERRAL_ABI } from "../../components/constants/lotteryreferralabi";
-import { LOTTERY_REFERRAL_ABI } from "../../components/constants/lotterytestingabi";
+import { LOTTERY_REFERRAL_ABI } from "../../components/constants/lotteryreferralabi";
+// import { LOTTERY_REFERRAL_ABI } from "../../components/constants/lotterytestingabi";
 
 import moment from "moment";
 // import { useReadContract, useWriteContract } from "wagmi";
@@ -198,7 +198,7 @@ const Index = () => {
                   type="text"
                   className="form-control"
                   id="firstPrize"
-                  placeholder="e.g., 3000"
+                  placeholder="For example, $5"
                   onChange={handleChange}
                   value={formData.firstPrize}
                 />
@@ -209,7 +209,7 @@ const Index = () => {
                   type="text"
                   className="form-control"
                   id="secondPrize"
-                  placeholder="e.g., 1000"
+                  placeholder="For example, $3"
                   onChange={handleChange}
                   value={formData.secondPrize}
                 />
@@ -220,7 +220,7 @@ const Index = () => {
                   type="text"
                   className="form-control"
                   id="thirdPrize"
-                  placeholder="e.g., 300"
+                  placeholder="For example, $1"
                   onChange={handleChange}
                   value={formData.thirdPrize}
                 />
@@ -244,7 +244,7 @@ const Index = () => {
                   type="text"
                   className="form-control"
                   id="otherPrizes"
-                  placeholder="Enter other lucky winners prize amount in dollars"
+                  placeholder="Enter prize amount for other lucky winners in $:"
                   onChange={handleChange}
                   value={formData.otherPrizes}
                 />
@@ -255,7 +255,7 @@ const Index = () => {
                   type="text"
                   className="form-control"
                   id="ticketPrice"
-                  placeholder="Enter Ticket Price"
+                  placeholder="Enter ticket price in $:"
                   onChange={handleChange}
                   value={formData.ticketPrice}
                 />
@@ -266,7 +266,7 @@ const Index = () => {
                   type="number"
                   className="form-control"
                   id="maxTicketCount"
-                  placeholder="Enter max ticket count"
+                  placeholder="Enter max ticket count (for example, 100, 1,000, 10,000)"
                   onChange={handleChange}
                   value={formData.maxTicketCount}
                 />

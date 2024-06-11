@@ -8,7 +8,9 @@ import {
 import { lotteryconfig } from "@/pages/_app";
 import { usdt } from "@/components/constants/usdtabi";
 import { Sender_CONTRACT_ABI } from "@/components/constants/Senderabi";
-import { LOTTERY_REFERRAL_ABI } from "@/components/constants/lotterytestingabi";
+// import { LOTTERY_REFERRAL_ABI } from "@/components/constants/lotterytestingabi";
+import { LOTTERY_REFERRAL_ABI } from "@/components/constants/lotteryreferralabi";
+
 import { useCallback } from "react";
 
 const TokenContract = process.env.NEXT_PUBLIC_TOKENADDRESS;
