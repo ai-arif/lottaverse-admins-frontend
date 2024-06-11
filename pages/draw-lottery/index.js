@@ -40,7 +40,7 @@ const Index = () => {
   const getLottery = async () => {
     try {
       const res = await axios.get(
-        "https://lottaverse.mainulhasan05.xyz/api/activelotteries"
+        `${process.env.API}/api/activelotteries`
       );
 
       setLotteries(res.data?.data);
@@ -102,7 +102,7 @@ const Index = () => {
   const handleSubmitDraw = async (lotteryId) => {
     // drawlottery
     const res = await axios.post(
-      "https://lottaverse.mainulhasan05.xyz/api/drawlottery",
+      `${process.env.API}/api/drawlottery`,
       {
         lotteryId: lotteryId,
       }
@@ -113,7 +113,7 @@ const Index = () => {
       <Layout>
         <h1>Draw Lottery</h1>
         <div className="row">
-          {lotteries.map((lottery) => (
+          {lotteries?.map((lottery) => (
             <div key={lottery.lotteryID} className="col-md-4">
               <div className="card">
                 <div className="card-body">

@@ -6,7 +6,7 @@ function Dashboard() {
   return (
     <>
       <Layout>
-        <LandingPage />
+        {/* <LandingPage /> */}
       </Layout>
     </>
   );
