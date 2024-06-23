@@ -17,6 +17,7 @@ function Layout({ children }) {
           <main>{children}</main>
         </Col>
       </Row>
+      
     </Container>
   );
 }
